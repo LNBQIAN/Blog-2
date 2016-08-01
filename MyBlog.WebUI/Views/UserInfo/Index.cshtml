@@ -1,0 +1,22 @@
+﻿@using MyBlog.Model
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+<div>
+    @{ UserInfo u = (UserInfo) ViewBag.UserInfo; }
+    @u.UName<br />
+       @u.UNickName<br />
+     @u.Email<br/>
+</div>
+</body>
+</html>
