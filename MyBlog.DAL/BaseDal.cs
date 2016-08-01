@@ -12,37 +12,34 @@ namespace MyBlog.DAL
 {
     public partial class BaseDal<T> where T : class, new()
     {
-        DbContext dbContext = new MyBlogEntities();
+        /// <summary>
+        /// EF上下文对象
+        /// </summary>
+        public DbContext dbContext = DbContextFactory.CreateDbContext();
         /// <summary>
         /// 增加
         /// </summary>
         /// <param name="t"></param>
-        /// <returns></returns>
-        public bool Add(T t)
+        public void Add(T t)
         {
             dbContext.Set<T>().Add(t);
-            return dbContext.SaveChanges() > 0;
         }
         /// <summary>
         /// 删除
         /// </summary>
         /// <param name="t"></param>
-        /// <returns></returns>
-        public bool Delete(T t)
+        public void Delete(T t)
         {
             dbContext.Set<T>().Remove(t);
-            return dbContext.SaveChanges() > 0;
         }
 
         /// <summary>
         /// 修改
         /// </summary>
         /// <param name="t"></param>
-        /// <returns></returns>
-        public bool Update(T t)
+        public void Update(T t)
         {
             dbContext.Set<T>().AddOrUpdate(t);
-            return dbContext.SaveChanges() > 0;
         }
         /// <summary>
         /// 查询

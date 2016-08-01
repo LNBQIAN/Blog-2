@@ -18,23 +18,32 @@ namespace MyBlog.BLL
         /// 具体执行数据操作的实例
         /// </summary>
         public IBaseDal<T> Dal { get; set; }
+
         /// <summary>
         /// 由子类重写该方法,为Dal赋值
         /// </summary>
         public abstract void GetDal();
 
+        /// <summary>
+        /// EF上下文对象
+        /// </summary>
+        public IEFDbContext DbContext = DALContainer.Container.Resolve<IEFDbContext>();
+        
         #region 增删改查
         public bool Add(T t)
         {
-            return Dal.Add(t);
+            Dal.Add(t);
+            return DbContext.SaveChanges();
         }
         public bool Delete(T t)
         {
-            return Dal.Delete(t);
+            Dal.Delete(t);
+            return DbContext.SaveChanges();
         }
         public bool Update(T t)
         {
-            return Dal.Update(t);
+            Dal.Update(t);
+            return DbContext.SaveChanges();
         }
         public IQueryable<T> GetModels(Expression<Func<T, bool>> WhereLambda)
         {

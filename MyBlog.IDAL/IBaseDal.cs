@@ -9,9 +9,9 @@ namespace MyBlog.IDAL
 {
     public partial interface IBaseDal<T> where T:class ,new()
     {
-        bool Add(T t);
-        bool Delete(T t);
-        bool Update(T t);
+        void Add(T t);
+        void Delete(T t);
+        void Update(T t);
         IQueryable<T> GetModels(Expression<Func<T, bool>> WhereLambda);
         IQueryable<T> GetModelsByPage<type>(int pageSize, int pageIndex, bool isAsc, Expression<Func<T, type>> OrderByLambda, Expression<Func<T, bool>> WhereLambda);
     }

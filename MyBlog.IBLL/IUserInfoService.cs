@@ -9,6 +9,6 @@ namespace MyBlog.IBLL
 {
     public partial interface IUserInfoService:IBaseService<UserInfo>
     {
-
+        bool DeleteList(List<int> idList);
     }
 }

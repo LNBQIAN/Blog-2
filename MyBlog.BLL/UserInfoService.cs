@@ -9,12 +9,29 @@ using MyBlog.Model;
 
 namespace MyBlog.BLL
 {
-
-    public  partial class UserInfoService:BaseService<UserInfo>,IUserInfoService
+    public partial class UserInfoService : BaseService<UserInfo>, IUserInfoService
     {
+        public IUserInfoDal UserInfoDal = DALContainer.Container.Resolve<IUserInfoDal>();
         public override void GetDal()
         {
             Dal = DALContainer.Container.Resolve<IUserInfoDal>();
+        }
+
+        public bool DeleteList(List<int> idList)
+        {
+            List<UserInfo> userInfos = UserInfoDal.GetModels(p => idList.Contains(p.Id)).ToList();
+            if (userInfos.Count > 0)
+            {
+                foreach (var u in userInfos)
+                {
+                    UserInfoDal.Delete(u);
+                }
+                return DbContext.SaveChanges();
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
