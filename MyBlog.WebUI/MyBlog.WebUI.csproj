@@ -127,19 +127,55 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\assets\css\admin.css" />
+    <Content Include="Content\assets\css\amazeui.css" />
+    <Content Include="Content\assets\css\amazeui.flat.css" />
+    <Content Include="Content\assets\css\amazeui.flat.min.css" />
+    <Content Include="Content\assets\css\amazeui.min.css" />
+    <Content Include="Content\assets\css\app.css" />
+    <Content Include="Content\assets\css\Blog.css" />
+    <Content Include="Content\assets\i\app-icon72x72%402x.png" />
+    <Content Include="Content\assets\i\examples\admin-chrome.png" />
+    <Content Include="Content\assets\i\examples\admin-firefox.png" />
+    <Content Include="Content\assets\i\examples\admin-ie.png" />
+    <Content Include="Content\assets\i\examples\admin-opera.png" />
+    <Content Include="Content\assets\i\examples\admin-safari.png" />
+    <Content Include="Content\assets\i\examples\adminPage.png" />
+    <Content Include="Content\assets\i\examples\blogPage.png" />
+    <Content Include="Content\assets\i\examples\landing.png" />
+    <Content Include="Content\assets\i\examples\landingPage.png" />
+    <Content Include="Content\assets\i\examples\loginPage.png" />
+    <Content Include="Content\assets\i\examples\sidebarPage.png" />
+    <Content Include="Content\assets\i\favicon.png" />
+    <Content Include="Content\assets\i\startup-640x1096.png" />
+    <Content Include="Content\assets\js\amazeui.ie8polyfill.js" />
+    <Content Include="Content\assets\js\amazeui.ie8polyfill.min.js" />
+    <Content Include="Content\assets\js\amazeui.js" />
+    <Content Include="Content\assets\js\amazeui.min.js" />
+    <Content Include="Content\assets\js\amazeui.widgets.helper.js" />
+    <Content Include="Content\assets\js\amazeui.widgets.helper.min.js" />
+    <Content Include="Content\assets\js\app.js" />
+    <Content Include="Content\assets\js\handlebars.min.js" />
+    <Content Include="Content\assets\js\jquery.min.js" />
+    <Content Include="Content\Blog\Base.css" />
+    <Content Include="Content\Image\RegPic.png" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\Blog\Base.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\assets\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\assets\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\assets\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\assets\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\assets\fonts\FontAwesome.otf" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -160,10 +196,13 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\UserInfo\Index.cshtml" />
+    <Content Include="Views\Shared\_BlogLayout.cshtml" />
+    <Content Include="Views\UserInfo\Add.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +216,10 @@
     <ProjectReference Include="..\MyBlog.BLLContainer\MyBlog.BLLContainer.csproj">
       <Project>{2ea726a3-f1b1-4c85-b50a-ef9fb67beb87}</Project>
       <Name>MyBlog.BLLContainer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyBlog.Common\MyBlog.Common.csproj">
+      <Project>{6e5294b2-ef34-4e6b-986b-2e8193a70687}</Project>
+      <Name>MyBlog.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\MyBlog.IBLL\MyBlog.IBLL.csproj">
       <Project>{fd3c1b4a-98f7-4097-8684-70d31c1e03ca}</Project>

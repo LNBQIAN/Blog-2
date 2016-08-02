@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_BlogLayout.cshtml";
+}
+
+<div class="am-g">
+    <div class="am-u-sm-7">
+        <img class="am-img-responsive" src="~/Content/Image/RegPic.png"/>
+    </div>
+    <div class="am-u-sm-5">
+        <div style="margin-top:160px">
+            <form action="@Url.Action("Add", "UserInfo")" class="am-form" data-am-validator>
+                <fieldset>
+                    <legend>注册(Register)</legend>
+
+                    <div class="am-form-group">
+                        <label for="UName">用户名：</label>
+                        <input type="text" id="UName" minlength="4" maxlength="12" placeholder="输入用户名（至少 4 个字符）" required/>
+                    </div>
+
+                    <div class="am-form-group">
+                        <label for="UPwd">密码：</label>
+                        <input type="password" id="UPwd" minlength="6" maxlength="16" placeholder="输入密码（至少 6个字符）" required/>
+                    </div>
+
+                    <div class="am-form-group">
+                        <label for="UNickName">昵称：</label>
+                        <input type="text" id="UNickName" minlength="2" maxlength="12" placeholder="输入昵称（至少 2个字符）" required/>
+                    </div>
+
+                    <div class="am-form-group">
+                        <label for="Email">邮箱：</label>
+                        <input type="email" id="Email" placeholder="输入邮箱" required/>
+                    </div>
+
+                    <div class="am-form-group">
+                        <label for="validateCode">验证码：</label>
+                        <input type="text" id="validateCode" minlength="5" maxlength="5" placeholder="输入验证码" required/><br/>
+                        <img id="validateCodeImg" src="@Url.Action("GetVCode", "UserInfo")" style="display: none"/>
+                    </div>
+
+                    <button class="am-btn am-btn-secondary" type="submit">注册</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    //jquery引用放在布局页底部，所以这里取不到 需要用原生js的onload方法
+    window.onload = function() {
+        $("#validateCodeImg").click(function() {
+            $(this).attr('src', '@Url.Action("GetVCode","UserInfo")?tokensxx=' + new Date().getMilliseconds());
+        });
+        $("#validateCode").focus(function() {
+            $("#validateCodeImg").css("display", "block");
+        });
+    };
+</script>
+
+

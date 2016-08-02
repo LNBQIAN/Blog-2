@@ -14,7 +14,7 @@ namespace MyBlog.BLL
         public IUserInfoDal UserInfoDal = DALContainer.Container.Resolve<IUserInfoDal>();
         public override void GetDal()
         {
-            Dal = DALContainer.Container.Resolve<IUserInfoDal>();
+            Dal = UserInfoDal;
         }
 
         public bool DeleteList(List<int> idList)
