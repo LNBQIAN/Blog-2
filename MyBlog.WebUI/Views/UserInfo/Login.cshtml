@@ -1,0 +1,82 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_BlogLayout.cshtml";
+}
+
+<div class="am-g">
+    <div class="am-u-sm-4">
+        <div style="margin-top:40%">
+            <img    class="am-img-responsive"  src="~/Content/Image/LoginPic.png" />
+        </div>
+    </div>
+    <div class="am-u-sm-8">
+        <div style="margin-top:25%">
+            <form id="loginForm" class="am-form am-form-horizontal">
+                <div class="am-form-group">
+                    <label for="uName" class="am-u-sm-2 am-form-label">用户名</label>
+                    <div class="am-u-sm-10">
+                        <input type="text" id="uName" name="uName" placeholder="输入你的用户名">
+                    </div>
+                </div>
+
+                <div class="am-form-group">
+                    <label for="uPwd" class="am-u-sm-2 am-form-label">密码</label>
+                    <div class="am-u-sm-10">
+                        <input type="password" id="uPwd" name="uPwd" placeholder="输入你的密码">
+                    </div>
+                </div>
+
+                <div class="am-form-group">
+                    <label for="validateCode" class="am-u-sm-2 am-form-label">验证码</label>
+                    <div class="am-u-sm-10">
+                        <input type="password" id="validateCode" name="validateCode" placeholder="输入验证码"><br/>
+                        <img id="validateCodeImg" src="@Url.Action("GetVCode", "UserInfo")" style="display: none" />
+                    </div>
+                </div>
+
+
+                <div class="am-form-group">
+                    <div class="am-u-sm-offset-2 am-u-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="rememberMe" value="1"> 记住我
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="am-form-group">
+                    <div class="am-u-sm-10 am-u-sm-offset-2">
+                        <button id="btnLogin" type="button" class="am-btn am-btn-secondary am-radius">登入</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    onload = function () {
+        $("#validateCodeImg").click(function () {
+            $(this).attr('src', '@Url.Action("GetVCode", "UserInfo")?tokensxx=' + new Date().getMilliseconds());
+        });
+        $("#validateCode").focus(function () {
+            $("#validateCodeImg").css("display", "block");
+        });
+
+        $("#btnLogin").click(function() {
+            $.post('@Url.Action("Login","UserInfo")', $('#loginForm').serialize(), function(data) {
+                if (data.status=="ok") {
+                    window.location.href = "@Url.Action("Index","Home")";
+                } else {
+                    layer.msg(data.msg);
+                    //每次登陆失败，刷新验证码
+                    $("#validateCodeImg").attr('src', '@Url.Action("GetVCode", "UserInfo")?tokensxx=' + new Date().getMilliseconds());
+                }
+            },"json");
+        });
+    };
+</script>
+
+
+

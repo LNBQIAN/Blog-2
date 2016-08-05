@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "SendEmail";
+    Layout = "~/Views/Shared/_BlogLayout.cshtml";
+}
+
+<form class="am-form">
+    <fieldset>
+        <legend>验证邮箱</legend>
+        <div class="am-form-group">
+            <label for="email">邮件</label>
+            <input type="email" id="email" placeholder="输入注册时填写的电子邮件"><br/>
+            <button class="am-btn am-btn-primary" id="btnSend" type="button">发送邮件</button>
+            <span id="time"></span>
+        </div>
+    </fieldset>
+</form>
+<script>
+    window.onload = function () {
+        var isPost= true;//表示 是否向服务器发送请求
+        $("#btnSend").click(function () {
+            var email = $("#email").val();
+            //判断邮箱格式是否正确
+            if (CheckEmail(email)) {
+                if (isPost) {
+                    $.post('@Url.Action("SendEmail","UserInfo")', { email: email }, function (data) {
+                        layer.msg('发送中...');
+                        //服务器邮件发送成功
+                        if (data.status == "ok") {
+                            $("#btnSend").text("邮件已发送");
+                            $("#btnSend").attr('disabled', "disabled");
+                            isPost = false;//在这30秒内，无法再次向服务器发送请求
+                            //倒计时效果
+                            var i = 30;
+                            var intervalid = setInterval(function () {
+                                if (i > 0) {
+                                    i--;
+                                }
+                                $("#time").html("没有收到邮件?<span style='color:red'>" + i + "</span>秒后重试");
+                            }, 1000);
+                            //30秒后解除限制
+                            setTimeout(function () {
+                                clearInterval(intervalid);
+                                $("#time").text("");
+                                $("#btnSend").text("发送邮件");
+                                $("#btnSend").removeAttr('disabled');
+                                isPost= true;
+                            }, 30000);
+                        } else {
+                            layer.msg(data.msg);
+                            if (data.msg == "当前用户已激活") {
+                                window.location.href = "@Url.Action("Index","Home")";
+                            }
+                        }
+                    }, "json");
+                }
+            } else {
+                layer.msg("邮箱格式不正确!");
+            }
+        });
+    };
+</script>

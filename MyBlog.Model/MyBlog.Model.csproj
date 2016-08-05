@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enum\UserInfoActive.cs" />
+    <Compile Include="Enum\UserInfoLevel.cs" />
     <Compile Include="MyBlog.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

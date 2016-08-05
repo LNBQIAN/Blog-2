@@ -1,0 +1,14 @@
+﻿@using MyBlog.Model
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_BlogLayout.cshtml";
+}
+
+<h2>我是博客首页,当前用户名:@{   UserInfo u = ViewBag.UserInfo as UserInfo;
+    if (u != null)
+    {
+        @u.UName
+    }
+     } <a href="@Url.Action("Exit","UserInfo")">退出</a></h2>
+
