@@ -1,5 +1,5 @@
-﻿CheckEmail = function(email) {
-    if (email.length<=0) {
+﻿CheckEmail = function (email) {
+    if (email.length <= 0) {
         return false;
     }
     var reg = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/;
@@ -19,10 +19,17 @@ CheckPassword = function (pwd) {
     var reg = /^[a-zA-Z]\w{5,15}$/;
     return reg.test(pwd);
 }
-CheckUNickName= function(unickname) {
-    if (unickname.length<=0) {
+CheckUNickName = function (unickname) {
+    if (unickname.length <= 0) {
         return false;
     }
     var reg = /^[a-zA-Z\u4e00-\u9fa5][a-zA-Z0-9_\u4E00-\u9FA5]{1,11}$/;
     return reg.test(unickname);
+}
+//将序列化成json格式后日期(毫秒数)转成日期格式
+ChangeDateFormat = function (cellval) {
+    var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+    var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    return date.getFullYear() + "-" + month + "-" + currentDate;
 }

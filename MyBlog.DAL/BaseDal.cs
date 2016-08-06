@@ -70,5 +70,15 @@ namespace MyBlog.DAL
                 return dbContext.Set<T>().Where(WhereLambda).OrderByDescending(OrderByLambda).Skip((pageIndex - 1) * pageSize).Take(pageSize);
             }
         }
+
+        /// <summary>
+        /// 获取一个表的总记录数
+        /// </summary>
+        /// <returns></returns>
+        public int GetRecord(string tableName)
+        {
+            string sql = "select   count(*)   from   " + tableName;
+            return dbContext.Database.SqlQuery<int>(sql).FirstOrDefault();
+        }
     }
 }

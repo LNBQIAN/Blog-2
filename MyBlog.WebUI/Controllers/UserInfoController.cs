@@ -38,7 +38,7 @@ namespace MyBlog.WebUI.Controllers
             //验证码过期
             if (Session["validateCode"] == null)
             {
-                return Json(new {status="no",msg="验证码已过期"},JsonRequestBehavior.AllowGet);
+                return Json(new { status = "no", msg = "验证码已过期" }, JsonRequestBehavior.AllowGet);
             }
             //验证码不相等
             if (!Session["validateCode"].ToString().Equals(validateCode))
@@ -145,7 +145,7 @@ namespace MyBlog.WebUI.Controllers
             {
                 //更新一下注册时间,因为注册的时候 会判断时间,如果用户不是注册后马上验证邮箱。可能是过了一天或者两天。那么就无法激活成功，按逻辑来说
                 // 激活时间应该按照 验证发出去的时间 来判断
-                userInfo.URegTime=DateTime.Now;
+                userInfo.URegTime = DateTime.Now;
                 UserInfoService.Update(userInfo);
                 //网站的域名
                 string domainName = ConfigurationManager.AppSettings["domainName"];
@@ -311,5 +311,48 @@ namespace MyBlog.WebUI.Controllers
             return File(Common.ValidateCode.CreateValidateGraphic(validateCode), "image/jpeg");
         }
         #endregion
+
+        #region 分页获取数据
+        /// <summary>
+        /// 获取用户数据 ，(登陆后,管理员等级才能访问)
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [IsAdminActionFilter]
+        public ActionResult GetUserInfoList(int pageIndex)
+        {
+            //每页显示条数
+            int pageSize = 1;
+            //总记录数
+            int totalCount = UserInfoService.GetRecord("UserInfo");
+            //总页数
+            int pageCount = Convert.ToInt32(Math.Ceiling(totalCount * 1.0 / pageSize));
+            //确定pageIndex范围
+            if (pageIndex <= 1)
+            {
+                pageIndex = 1;
+            }
+            if (pageIndex >= pageCount)
+            {
+                pageIndex = pageCount;
+            }
+            //查询当前页数据
+            var userInfoList = UserInfoService.GetModelsByPage(pageSize, pageIndex, true, p => p.Id, p => true).Select(p => new
+            {
+                Id = p.Id,
+                UName = p.UName,
+                UNickName = p.UNickName,
+                ULevel = p.ULevel == (int)Model.Enum.UserInfoLevel.Admin ? "管理员" : "普通用户",
+                Active = p.Active == (int)Model.Enum.UserInfoActive.Active ? "已激活" : "未激活",
+                URegTime = p.URegTime
+            });
+            //分页字符串
+            string pageBar=Common.PageBar.GetNumberPageBar(pageCount,pageIndex);
+
+            return Json(new { userInfoList=userInfoList,pageBar=pageBar },JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
     }
 }

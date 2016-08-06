@@ -14,6 +14,7 @@ namespace MyBlog.IDAL
         void Update(T t);
         IQueryable<T> GetModels(Expression<Func<T, bool>> WhereLambda);
         IQueryable<T> GetModelsByPage<type>(int pageSize, int pageIndex, bool isAsc, Expression<Func<T, type>> OrderByLambda, Expression<Func<T, bool>> WhereLambda);
+        int GetRecord(string tableName);
     }
 }
 

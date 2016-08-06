@@ -53,6 +53,11 @@ namespace MyBlog.BLL
         {
             return Dal.GetModelsByPage(pageSize, pageIndex, isAsc, OrderByLambda, WhereLambda);
         }
+
+        public int GetRecord(string tableName)
+        {
+            return Dal.GetRecord(tableName);
+        }
         #endregion
     }
 }

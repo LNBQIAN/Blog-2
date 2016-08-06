@@ -13,5 +13,6 @@ namespace MyBlog.DAL
 {
     public partial class UserInfoDal : BaseDal<UserInfo>, IUserInfoDal
     {
+      
     }
 }
