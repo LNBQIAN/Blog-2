@@ -12,18 +12,18 @@
     </div>
     <div class="am-u-sm-7">
         <div style="margin-top:50px">
-            <form id="RegForm"  action="@Url.Action("Add","UserInfo")" method="POST"  class="am-form" data-am-validator>
+            <form id="RegForm"   class="am-form" data-am-validator>
                 <fieldset>
                     <legend>注册(Register)</legend>
 
                     <div class="am-form-group">
                         <label for="UName">用户名：</label>
-                        <input type="text" id="UName" name="UName" minlength="4" maxlength="12" placeholder="输入用户名（至少 4 个字符）" required />
+                        <input type="text" id="UName" name="UName" minlength="4" maxlength="12" placeholder="输入用户名（至少 4 个字符,不支持中文）" required />
                     </div>
 
                     <div class="am-form-group">
                         <label for="UPwd">密码：</label>
-                        <input type="password" id="UPwd" name="UPwd" minlength="6" maxlength="16" placeholder="输入密码（至少 6个字符）" required />
+                        <input type="password" id="UPwd" name="UPwd" minlength="6" maxlength="16" placeholder="输入密码（至少 6个字符,以字母开头）" required />
                     </div>
 
                     <div class="am-form-group">
@@ -41,7 +41,7 @@
                         <input type="text" id="validateCode" name="validateCode" minlength="5" maxlength="5" placeholder="输入验证码" required /><br />
                         <img id="validateCodeImg" src="@Url.Action("GetVCode", "UserInfo")" style="display: none" />
                     </div>
-                    <button id="btnReg" class="am-btn am-btn-secondary am-radius" type="submit">注册</button>
+                    <button id="btnReg" class="am-btn am-btn-secondary am-radius" type="button">注册</button>
                 </fieldset>
             </form>
         </div>
@@ -50,19 +50,54 @@
 
 <script>
     //jquery引用放在布局页底部，所以这里取不到 需要用原生js的onload方法
-    window.onload = function() {
+    window.onload = function () {
+        //验证码效果
         $("#validateCodeImg").click(function() {
             $(this).attr('src', '@Url.Action("GetVCode", "UserInfo")?tokensxx=' + new Date().getMilliseconds());
         });
         $("#validateCode").focus(function() {
             $("#validateCodeImg").css("display", "block");
         });
-        if ("@ViewBag.Msg".length>0) {
-            layer.msg("@ViewBag.Msg");
-        }
-        $("#RegForm").submit(function() {
-            layer.msg("...");
+        //注册
+        $("#btnReg").click(function () {
+            if (CheckData()==false) {
+                return;
+            }
+            $.post('@Url.Action("Add","UserInfo")', $("#RegForm").serialize(), function (data) {
+                if (data.status=="ok") {
+                    window.location.href = "@Url.Action("SendEmail","UserInfo")";
+                } else {
+                    layer.msg(data.msg);
+                    //注册失败刷新验证码
+                    $("#validateCodeImg").attr('src', '@Url.Action("GetVCode", "UserInfo")?tokensxx=' + new Date().getMilliseconds());
+                }
+            });
         });
+        //检查数据正确性
+        CheckData= function() {
+            var isOk = true;
+            //判断用户名
+            if (CheckUName($("#UName").val())==false) {
+                layer.msg("用户名格式不正确");
+                isOk = false;
+            }
+            //判断密码
+            if (CheckPassword($("#UPwd").val()) == false) {
+                isOk = false;
+                layer.msg("密码格式不正确");
+            }
+            //判断昵称
+            if (CheckUNickName($("#UNickName").val()) == false) {
+                isOk = false;
+                layer.msg("昵称格式不正确");
+            }
+            //判断邮箱
+            if (CheckEmail($("#Email").val()) == false) {
+                isOk = false;
+                layer.msg("邮箱格式不正确");
+            }
+            return isOk;
+        }
     };
 </script>
 

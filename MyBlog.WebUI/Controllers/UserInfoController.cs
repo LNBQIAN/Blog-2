@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using MyBlog.IBLL;
@@ -34,23 +35,43 @@ namespace MyBlog.WebUI.Controllers
         public ActionResult Add(UserInfo userInfo, string validateCode)
         {
             #region 判断验证码
-            ViewBag.Msg = "";
             //验证码过期
             if (Session["validateCode"] == null)
             {
-                ViewBag.Msg = "验证码已过期";
-                return View();
+                return Json(new {status="no",msg="验证码已过期"},JsonRequestBehavior.AllowGet);
             }
             //验证码不相等
             if (!Session["validateCode"].ToString().Equals(validateCode))
             {
-                ViewBag.Msg = "验证码不正确";
                 Session["validateCode"] = null;
-                return View();
+                return Json(new { status = "no", msg = "验证码错误" }, JsonRequestBehavior.AllowGet);
             }
             #endregion
 
-            #region 验证码正确,数据加入数据库
+            #region 验证码正确，验证参数
+            //判断用户名
+            if (!Regex.IsMatch(userInfo.UName, @"^[a-zA-Z][a-zA-Z0-9]{3,11}$"))
+            {
+                return Json(new { status = "no", msg = "用户名格式不正确" }, JsonRequestBehavior.AllowGet);
+            }
+            //判断密码
+            if (!Regex.IsMatch(userInfo.UPwd, @"^[a-zA-Z]\w{5,15}$"))
+            {
+                return Json(new { status = "no", msg = "密码格式不正确" }, JsonRequestBehavior.AllowGet);
+            }
+            //判断昵称
+            if (!Regex.IsMatch(userInfo.UNickName, @"^[a-zA-Z\u4e00-\u9fa5][a-zA-Z0-9_\u4E00-\u9FA5]{1,11}$"))
+            {
+                return Json(new { status = "no", msg = "昵称格式不正确" }, JsonRequestBehavior.AllowGet);
+            }
+            //判断邮箱
+            if (!Regex.IsMatch(userInfo.Email, @"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?"))
+            {
+                return Json(new { status = "no", msg = "邮箱格式不正确" }, JsonRequestBehavior.AllowGet);
+            }
+            #endregion
+
+            #region 数据加入数据库
             Session["validateCode"] = null;
             userInfo.UPwd = Common.MD5Helper.GetMD5String(userInfo.UPwd);// 密码MD5加密
             userInfo.Active = (int)Model.Enum.UserInfoActive.NoActive;//默认未激活状态
@@ -63,32 +84,28 @@ namespace MyBlog.WebUI.Controllers
             int uNameCount = UserInfoService.GetModels(p => p.UName == userInfo.UName).Count();
             if (uNameCount > 0)
             {
-                ViewBag.Msg = "用户名已存在";
-                return View();
+                return Json(new { status = "no", msg = "用户名已存在" }, JsonRequestBehavior.AllowGet);
             }
             int uNickNameCount = UserInfoService.GetModels(p => p.UNickName == userInfo.UNickName).Count();
             if (uNickNameCount > 0)
             {
-                ViewBag.Msg = "昵称已存在";
-                return View();
+                return Json(new { status = "no", msg = "昵称已存在" }, JsonRequestBehavior.AllowGet);
             }
             int emailCount = UserInfoService.GetModels(p => p.Email == userInfo.Email).Count();
             if (emailCount > 0)
             {
-                ViewBag.Msg = "邮箱已存在";
-                return View();
+                return Json(new { status = "no", msg = "邮箱已存在" }, JsonRequestBehavior.AllowGet);
             }
             //加入数据库
             if (UserInfoService.Add(userInfo))
             {
                 //注册成功
                 Session["UserInfo"] = userInfo;
-                return View("SendEmail");
+                return Json(new { status = "ok", msg = "注册成功" }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                ViewBag.Msg = "注册失败";
-                return View();
+                return Json(new { status = "no", msg = "注册失败" }, JsonRequestBehavior.AllowGet);
             }
             #endregion
         }
@@ -126,6 +143,10 @@ namespace MyBlog.WebUI.Controllers
             }
             if (userInfo.Email == email)
             {
+                //更新一下注册时间,因为注册的时候 会判断时间,如果用户不是注册后马上验证邮箱。可能是过了一天或者两天。那么就无法激活成功，按逻辑来说
+                // 激活时间应该按照 验证发出去的时间 来判断
+                userInfo.URegTime=DateTime.Now;
+                UserInfoService.Update(userInfo);
                 //网站的域名
                 string domainName = ConfigurationManager.AppSettings["domainName"];
                 //验证邮箱的验证码
@@ -179,9 +200,20 @@ namespace MyBlog.WebUI.Controllers
                 else
                 {
                     //超过了 规定时间
-                    if (DateTime.Now.Day - userInfo.URegTime.Day > 1)
+                    if ((DateTime.Now - userInfo.URegTime).TotalDays >= 1)
                     {
+                        //删除
                         UserInfoService.Delete(userInfo);
+                        //如果已经登陆的话,清除session
+                        if (Session["UserInfo"] != null)
+                        {
+                            //判断当前登录的用户，就是要激活的用户
+                            if ((Session["UserInfo"] as UserInfo).Id == userInfo.Id)
+                            {
+                                //清除
+                                Session["UserInfo"] = null;
+                            }
+                        }
                         return Json(new { status = "no", msg = "未在规定时间内激活,请重新注册" }, JsonRequestBehavior.AllowGet);
                     }
                     //判断验证码是否相同
@@ -212,7 +244,7 @@ namespace MyBlog.WebUI.Controllers
             }
         }
         #endregion
-        
+
         #region 登陆
         public ActionResult Login()
         {
@@ -267,7 +299,7 @@ namespace MyBlog.WebUI.Controllers
             Session["UserInfo"] = null;
             Response.Cookies["UName"].Expires = DateTime.Now.AddDays(-1);
             Response.Cookies["UPwd"].Expires = DateTime.Now.AddDays(-1);
-            return Redirect(Url.Action("Login","UserInfo"));
+            return Redirect(Url.Action("Login", "UserInfo"));
         }
         #endregion
 

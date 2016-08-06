@@ -16,21 +16,21 @@
                 <div class="am-form-group">
                     <label for="uName" class="am-u-sm-2 am-form-label">用户名</label>
                     <div class="am-u-sm-10">
-                        <input type="text" id="uName" name="uName" placeholder="输入你的用户名">
+                        <input type="text" id="uName" name="uName" minlength="4" maxlength="12" placeholder="输入你的用户名">
                     </div>
                 </div>
 
                 <div class="am-form-group">
                     <label for="uPwd" class="am-u-sm-2 am-form-label">密码</label>
                     <div class="am-u-sm-10">
-                        <input type="password" id="uPwd" name="uPwd" placeholder="输入你的密码">
+                        <input type="password" id="uPwd" name="uPwd" minlength="6" maxlength="16" placeholder="输入你的密码">
                     </div>
                 </div>
 
                 <div class="am-form-group">
                     <label for="validateCode" class="am-u-sm-2 am-form-label">验证码</label>
                     <div class="am-u-sm-10">
-                        <input type="password" id="validateCode" name="validateCode" placeholder="输入验证码"><br/>
+                        <input type="password" id="validateCode" name="validateCode"  minlength="5" maxlength="5" placeholder="输入验证码"><br/>
                         <img id="validateCodeImg" src="@Url.Action("GetVCode", "UserInfo")" style="display: none" />
                     </div>
                 </div>
@@ -64,7 +64,11 @@
             $("#validateCodeImg").css("display", "block");
         });
 
-        $("#btnLogin").click(function() {
+        $("#btnLogin").click(function () {
+            if (CheckData()==false) {
+                return;
+            }
+
             $.post('@Url.Action("Login","UserInfo")', $('#loginForm').serialize(), function(data) {
                 if (data.status=="ok") {
                     window.location.href = "@Url.Action("Index","Home")";
@@ -73,8 +77,22 @@
                     //每次登陆失败，刷新验证码
                     $("#validateCodeImg").attr('src', '@Url.Action("GetVCode", "UserInfo")?tokensxx=' + new Date().getMilliseconds());
                 }
-            },"json");
+            });
         });
+        //验证用户名和密码和验证码不为空
+        CheckData = function() {
+            var isOk = true;
+            if ($("#uName").val().length < 4 || $("#uName").val().length > 12) {
+                isOk = false;
+            }
+            if ($("#uPwd").val().length < 6 || $("#uPwd").val().length > 16) {
+                isOk = false;
+            }
+            if ($("#validateCode").val().length < 5 || $("#validateCode").val().length > 5) {
+                isOk = false;
+            }
+            return isOk;
+        };
     };
 </script>
 
