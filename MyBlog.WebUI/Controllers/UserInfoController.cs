@@ -323,7 +323,7 @@ namespace MyBlog.WebUI.Controllers
         public ActionResult GetUserInfoList(int pageIndex)
         {
             //每页显示条数
-            int pageSize = 1;
+            int pageSize = 10;
             //总记录数
             int totalCount = UserInfoService.GetRecord("UserInfo");
             //总页数
@@ -348,7 +348,7 @@ namespace MyBlog.WebUI.Controllers
                 URegTime = p.URegTime
             });
             //分页字符串
-            string pageBar=Common.PageBar.GetNumberPageBar(pageCount,pageIndex);
+            string pageBar=Common.PageBar.GetNumberPageBarWithFirstIndexAndLastIndex(pageCount,pageIndex);
 
             return Json(new { userInfoList=userInfoList,pageBar=pageBar },JsonRequestBehavior.AllowGet);
         }
