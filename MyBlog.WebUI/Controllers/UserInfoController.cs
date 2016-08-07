@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
@@ -325,7 +326,11 @@ namespace MyBlog.WebUI.Controllers
             //每页显示条数
             int pageSize = 10;
             //总记录数
-            int totalCount = UserInfoService.GetRecord("UserInfo");
+            int totalCount = UserInfoService.GetRecord("userInfo");
+            if (totalCount <= 0)
+            {
+                totalCount = 1;
+            }
             //总页数
             int pageCount = Convert.ToInt32(Math.Ceiling(totalCount * 1.0 / pageSize));
             //确定pageIndex范围
@@ -348,11 +353,121 @@ namespace MyBlog.WebUI.Controllers
                 URegTime = p.URegTime
             });
             //分页字符串
-            string pageBar=Common.PageBar.GetNumberPageBarWithFirstIndexAndLastIndex(pageCount,pageIndex);
+            string pageBar = Common.PageBar.GetNumberPageBarWithFirstIndexAndLastIndex(pageCount, pageIndex);
 
-            return Json(new { userInfoList=userInfoList,pageBar=pageBar },JsonRequestBehavior.AllowGet);
+            return Json(new { userInfoList = userInfoList, pageBar = pageBar }, JsonRequestBehavior.AllowGet);
         }
         #endregion
+
+        #region 删除
+        /// <summary>
+        /// 删除  (登陆后，管理员权限可以删除)
+        /// </summary>
+        /// <param name="idStr">1,2,3,4,5 这种格式</param>
+        /// <returns></returns>
+        [HttpPost]
+        [IsAdminActionFilter]
+        public ActionResult Delete(string idStr)
+        {
+            string[] idArray = idStr.Split(',');
+            List<int> idList = idArray.Select(id => Convert.ToInt32(id)).ToList();
+            if (UserInfoService.DeleteList(idList))
+            {
+                return Json(new { status = "ok", msg = "删除成功" });
+            }
+            else
+            {
+                return Json(new { status = "no", msg = "删除失败" });
+            }
+        }
+        #endregion
+
+        #region 编辑(管理员操作)
+        /// <summary>
+        /// 编辑页面（登陆后，管理员可以访问）
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [IsAdminActionFilter]
+        public ActionResult Edit(int id)
+        {
+            UserInfo userInfo = UserInfoService.GetModels(p => p.Id == id).FirstOrDefault();
+            return View(userInfo);
+        }
+        [HttpPost]
+        [IsAdminActionFilter]
+        public ActionResult Edit(UserInfo userInfo,string uPwd2,string uName2,string uNickName2, string Email2)
+        {
+            #region 判断对象里的值有没有被修改,被修改的话，需要验证参数。密码被修改，需要md5加密
+            //用户名被修改
+            if (userInfo.UName !=uName2)
+            {
+                //判断用户名
+                if (!Regex.IsMatch(userInfo.UName, @"^[a-zA-Z][a-zA-Z0-9]{3,11}$"))
+                {
+                    return Json(new { status = "no", msg = "用户名格式不正确" }, JsonRequestBehavior.AllowGet);
+                }
+                //判断用户名是否存在
+                int uNameCount = UserInfoService.GetModels(p => p.UName == userInfo.UName).Count();
+                if (uNameCount > 0)
+                {
+                    return Json(new { status = "no", msg = "用户名已存在" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            //密码被修改
+            if (userInfo.UPwd != uPwd2)
+            {
+                //判断密码
+                if (!Regex.IsMatch(userInfo.UPwd, @"^[a-zA-Z]\w{5,15}$"))
+                {
+                    return Json(new { status = "no", msg = "密码格式不正确" }, JsonRequestBehavior.AllowGet);
+                }
+                userInfo.UPwd = Common.MD5Helper.GetMD5String(userInfo.UPwd);// 密码MD5加密
+            }
+            //昵称被修改
+            if (userInfo.UNickName != uNickName2)
+            {
+                //判断昵称
+                if (!Regex.IsMatch(userInfo.UNickName, @"^[a-zA-Z\u4e00-\u9fa5][a-zA-Z0-9_\u4E00-\u9FA5]{1,11}$"))
+                {
+                    return Json(new { status = "no", msg = "昵称格式不正确" }, JsonRequestBehavior.AllowGet);
+                }
+                int uNickNameCount = UserInfoService.GetModels(p => p.UNickName == userInfo.UNickName).Count();
+                if (uNickNameCount > 0)
+                {
+                    return Json(new { status = "no", msg = "昵称已存在" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            //邮箱被修改
+            if (userInfo.Email != Email2)
+            {
+                //判断邮箱
+                if (!Regex.IsMatch(userInfo.Email, @"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?"))
+                {
+                    return Json(new { status = "no", msg = "邮箱格式不正确" }, JsonRequestBehavior.AllowGet);
+                }
+                int emailCount = UserInfoService.GetModels(p => p.Email == userInfo.Email).Count();
+                if (emailCount > 0)
+                {
+                    return Json(new { status = "no", msg = "邮箱已存在" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            #endregion
+            
+            #region 更新
+            if (UserInfoService.Update(userInfo))
+            {
+                return Json(new { status = "ok", msg = "更新成功" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { status = "no", msg = "更新失败" }, JsonRequestBehavior.AllowGet);
+            }
+            #endregion
+        }
+        #endregion
+
+
 
     }
 }

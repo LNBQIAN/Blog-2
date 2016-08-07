@@ -1,0 +1,170 @@
+﻿@using MyBlog.Model
+@model  UserInfo
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="am-cf am-padding am-padding-bottom-0">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">用户资料</strong> / <small>User information</small></div>
+</div>
+
+<hr />
+
+<div class="am-g">
+    <div class="am-u-sm-12 am-u-md-4 am-u-md-push-8">
+        <div class="am-panel am-panel-default">
+            <div class="am-panel-bd">
+                <div class="am-g">
+                    <div class="am-u-md-4">
+                        <img class="am-circle am-img-thumbnail" src="@Model.UHeadPhoto" alt="" />
+                    </div>
+                    <div class="am-u-md-8">
+                        <form class="am-form">
+                            <div class="am-form-group">
+                                <input type="file" id="user-pic">
+                                <p class="am-form-help">请选择要上传的文件...</p>
+                                <button type="button" class="am-btn am-btn-primary am-btn-xs">保存</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="am-u-sm-12 am-u-md-8 am-u-md-pull-4">
+        <form id="EditForm" class="am-form am-form-horizontal" action="javascript:void(0);">
+            <input type="hidden" name="Id" value="@Model.Id"/>
+            <input type="hidden" name="validateCode" value="@Model.validateCode" />
+            <input type="hidden" name="UHeadPhoto" value="@Model.UHeadPhoto"/>
+            <input type="hidden" name="uPwd2" value="@Model.UPwd"/>
+            <input type="hidden" name="uName2" value="@Model.UName"/>
+            <input type="hidden" name="uNickName2" value="@Model.UNickName"/>
+            <input type="hidden" name="Email2" value="@Model.Email" />
+            <div class="am-form-group">
+                <label for="UName" class="am-u-sm-3 am-form-label">用户名</label>
+                <div class="am-u-sm-9">
+                    <input type="text" id="UName" name="UName" value="@Model.UName">
+                </div>
+            </div>
+
+            <div class="am-form-group">
+                <label for="UNickName" class="am-u-sm-3 am-form-label">昵称</label>
+                <div class="am-u-sm-9">
+                    <input type="text" id="UNickName" name="UNickName" value="@Model.UNickName">
+                </div>
+            </div>
+
+            <div class="am-form-group">
+                <label for="UPwd" class="am-u-sm-3 am-form-label">密码</label>
+                <div class="am-u-sm-9">
+                    <input type="password" id="UPwd" name="UPwd" value="@Model.UPwd">
+                </div>
+            </div>
+
+            <div class="am-form-group">
+                <label for="Email" class="am-u-sm-3 am-form-label">邮箱</label>
+                <div class="am-u-sm-9">
+                    <input type="Email" id="Email" name="Email" value="@Model.Email">
+                </div>
+            </div>
+
+            <div class="am-form-group">
+                <label for="URegTime" class="am-u-sm-3 am-form-label">注册时间</label>
+                <div class="am-u-sm-9">
+                    <input type="text" id="URegTime" name="URegTime" value="@Model.URegTime">
+                </div>
+            </div>
+
+            <div class="am-form-group">
+                <label for="ULevel" class="am-u-sm-3 am-form-label">等级</label>
+                <div class="am-u-sm-9">
+                    <select data-am-selected id="ULevel" name="ULevel">
+                        @{
+                            int level;
+                            if (Model.ULevel == (int) MyBlog.Model.Enum.UserInfoLevel.Admin)
+                            {
+                                <option value="@{
+                                                   level = (int) MyBlog.Model.Enum.UserInfoLevel.Admin;
+                                                   @level
+                                               }" selected> 管理员 </option>
+                                <option value="@{
+                                                   level = (int) MyBlog.Model.Enum.UserInfoLevel.OrdinaryUser;
+                                                   @level
+                                               }">普通用户</option>
+                            }
+                            else
+                            {
+                                <option value="@{
+                                                   level = (int) MyBlog.Model.Enum.UserInfoLevel.Admin;
+                                                   @level
+                                               }"> 管理员 </option>
+                                <option value="@{
+                                                   level = (int) MyBlog.Model.Enum.UserInfoLevel.OrdinaryUser;
+                                                   @level
+                                               }" selected>普通用户</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="am-form-group">
+                <label for="Active" class="am-u-sm-3 am-form-label">激活状态</label>
+                <div class="am-u-sm-9">
+                    <select data-am-selected id="Active" name="Active">
+                        @{
+                            int active;
+                            if (Model.Active == (int) MyBlog.Model.Enum.UserInfoActive.Active)
+                            {
+                                <option value="@{
+                                                   active = (int) MyBlog.Model.Enum.UserInfoActive.Active;
+                                                   @active
+                                               }" selected> 已激活 </option>
+                                <option value="@{
+                                                   active = (int) MyBlog.Model.Enum.UserInfoActive.NoActive;
+                                                   @active
+                                               }">未激活</option>
+                            }
+                            else
+                            {
+                                <option value="@{
+                                                   active = (int) MyBlog.Model.Enum.UserInfoActive.Active;
+                                                   @active
+                                               }"> 已激活 </option>
+                                <option value="@{
+                                                   active = (int) MyBlog.Model.Enum.UserInfoActive.NoActive;
+                                                   @active
+                                               }" selected>未激活</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="am-form-group">
+                <div class="am-u-sm-9 am-u-sm-push-3">
+                    <button id="btnEdit" type="button" class="am-btn am-btn-primary">保存修改</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    onload = function() {
+        //为保存修改按钮注册点击事件
+        $("#btnEdit").click(function() {
+            $.post('@Url.Action("Edit","UserInfo")', $("#EditForm").serialize(), function(data) {
+                if (data.status == "ok") {
+                    layer.msg(data.msg);
+                    //修改成功后刷新页面
+                    window.location.reload();
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        });
+    };
+</script>

@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 <div class="am-cf am-padding am-padding-bottom-0">
-    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">表格</strong> / <small>Table</small></div>
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">用户列表</strong> / <small>User List</small></div>
 </div>
 
 <hr>
@@ -16,41 +16,20 @@
                 <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
                 <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
                 <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核</button>
-                <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
+                <button id="btnDeleteList" type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
             </div>
-        </div>
-    </div>
-    <div class="am-u-sm-12 am-u-md-3">
-        <div class="am-form-group">
-            <select data-am-selected="{btnSize: 'sm'}">
-                <option value="option1">所有类别</option>
-                <option value="option2">IT业界</option>
-                <option value="option3">数码产品</option>
-                <option value="option3">笔记本电脑</option>
-                <option value="option3">平板电脑</option>
-                <option value="option3">只能手机</option>
-                <option value="option3">超极本</option>
-            </select>
-        </div>
-    </div>
-    <div class="am-u-sm-12 am-u-md-3">
-        <div class="am-input-group am-input-group-sm">
-            <input type="text" class="am-form-field">
-            <span class="am-input-group-btn">
-                <button class="am-btn am-btn-default" type="button">搜索</button>
-            </span>
         </div>
     </div>
 </div>
 
 <div class="am-g">
     <div class="am-u-sm-12">
-        <form class="am-form">
+        <form class="am-form" action="javascript:void(0);">
             <div class="am-scrollable-horizontal">
                 <table class="am-table am-table-striped am-table-hover table-main">
                     <thead>
                     <tr>
-                        <th><input type="checkbox"/></th>
+                        <th><input type="checkbox" id="checkAll"/></th>
                         <th>ID</th>
                         <th>用户名</th>
                         <th>昵称</th>
@@ -66,32 +45,65 @@
             <!--页面条-->
             <div class="am-cf">
                 <div class="am-fr">
-                    <ul id="pageBarUl" class="am-pagination">
-                    </ul>
+                    <ul id="pageBarUl" class="am-pagination"></ul>
                 </div>
             </div>
-            <hr />
+            <hr/>
         </form>
     </div>
 
 </div>
 
+
 <script>
-    onload = function() {
+    onload = function () {
+        //第一次加载时读取首页数据
         GetUserInfoList(1);
+        //为全选checkbox注册点击事件
+        $("#checkAll").click(function () {
+            //如果当全选框被选中，那么所有的checkbox都选中，如果全选框没有选中,那么所有的checkbox都不选中
+            if ($(this).prop('checked')) {
+                $("#UserInfoTBody input[type='checkbox']").prop('checked', true);
+            } else {
+                $("#UserInfoTBody input[type='checkbox']").prop('checked', false);
+            }
+        });
+        //为删除多个的按钮注册点击事件
+        $("#btnDeleteList").click(function () {
+            //先判断checkbox选中数量
+            var checkedCount = 0;
+            //要删除数据的id编号
+            var idstr = "";
+            $("#UserInfoTBody input[type='checkbox']").each(function () {
+                if ($(this).prop("checked")) {
+                    //当前checkbox选中，选中总数加1
+                    checkedCount = checkedCount + 1;
+                    idstr = idstr + $(this).attr("userId") + ",";
+                }
+            });
+
+            if (checkedCount <= 0) {
+                layer.msg("请选择一条数据");
+                return;
+            }
+            //idStr  1,2,3,4,5, 把最后一个逗号去掉，截取1，2，3，4，5
+            idstr = idstr.substring(0, idstr.length - 1);
+            //删除
+            Delete(idstr);
+        });
     };
 
     //获取数据
-    GetUserInfoList = function(pageIndex) {
-        $.post('@Url.Action("GetUserInfoList", "UserInfo")', { pageIndex: pageIndex }, function(data) {
+    GetUserInfoList = function (pageIndex) {
+        $.post('@Url.Action("GetUserInfoList", "UserInfo")', { pageIndex: pageIndex}, function (data) {
             //遍历用户数据,为表格填充数据
             //填充前先清空之前的数据
             $("#UserInfoTBody").empty();
             $("#pageBarUl").empty();
             //开始遍历
-            $.each(data.userInfoList, function(index, item) {
+            $.each(data.userInfoList, function (index, item) {
                 $("#UserInfoTBody").append("<tr>" +
-                    "<td><input type='checkbox'/></td>" +
+                    "<td><input  userId='" + item.Id + "'  type='checkbox'/></td>" +
                     "<td>" + item.Id + "</td><td>" +
                     "<a href='#'>" + item.UName + "</a></td>" +
                     "<td>" + item.UNickName + "</td>" +
@@ -99,19 +111,45 @@
                     "<td>" + item.Active + "</td>" +
                     "<td class='am-hide-sm-only'>" + ChangeDateFormat(item.URegTime) + "</td>" +
                     "<td><div class='am-btn-toolbar'><div class='am-btn-group am-btn-group-xs'> " +
-                    "<button class='am-btn am-btn-default am-btn-xs am-text-secondary'><span class='am-icon-pencil-square-o'></span> 编辑</button> " +
+                    "<button onclick='SkipToEdit("+item.Id+")' class='am-btn am-btn-default am-btn-xs am-text-secondary'><span class='am-icon-pencil-square-o'></span> 编辑</button> " +
                     "<button class='am-btn am-btn-default am-btn-xs am-hide-sm-only'><span class='am-icon-copy'></span> 复制</button>  " +
-                    "<button class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only'><span class='am-icon-trash-o'></span> 删除</button></div></div></td></tr>");
+                    "<button  onclick='Delete(" + item.Id + ");'  class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only'><span class='am-icon-trash-o'></span> 删除</button></div></div></td></tr>");
             });
             //为分页UI填充数据
             $("#pageBarUl").append(data.pageBar);
             //为pageBarUl下的a标签注册点击事件
             $("#pageBarUl a").click(function () {
                 //当前a标签 存在pageIndex属性的话
-                if (typeof($(this).attr('pageIndex')) != "undefined") {
+                if (typeof ($(this).attr('pageIndex')) != "undefined") {
                     GetUserInfoList($(this).attr('pageIndex'));
                 }
             });
         });
     };
+    //删除
+    Delete = function (id) {
+        layer.confirm('确定删除?', { icon: 3, title: '提示' }, function () {
+            $.post('@Url.Action("Delete","UserInfo")', { idStr: id }, function (data) {
+                if (data.status == "ok") {
+                    layer.msg(data.msg);
+                    //当前页(删除成功后，重新获取这一页的数据)
+                    var pageIndex = GetPageIndex();
+                    GetUserInfoList(pageIndex);
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        });
+    };
+    //跳转到编辑详情页
+    SkipToEdit= function(id) {
+        window.location.href = "@Url.Action("Edit","UserInfo")?id="+id;
+    }
+
+    //获取当前页
+    GetPageIndex = function () {
+        //分页数据中 有am-active样式类的 li标签下的  a标签的内容  就是当前页
+        var pageIndex = $("#pageBarUl li[class='am-active'] a").text();
+        return pageIndex;
+    }
 </script>
