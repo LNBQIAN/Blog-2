@@ -485,9 +485,9 @@ namespace MyBlog.WebUI.Controllers
                 return Content(JsonConvert.SerializeObject(new { status = "no", msg = "上传头像不能为空" }));
             }
             //获取文件扩展名
-            string fileExtName = Path.GetExtension(uHeadPhoto.FileName).ToUpper();
+            string fileExtName = Path.GetExtension(uHeadPhoto.FileName).ToLower();
 
-            if (fileExtName != ".BMP" && fileExtName != ".JPEG" && fileExtName != ".PNG" && fileExtName != ".JPG")
+            if (fileExtName != ".bmp" && fileExtName != ".jpeg" && fileExtName != ".png" && fileExtName != ".jpg")
             {
                 return Content(JsonConvert.SerializeObject(new { status = "no", msg = "上传头像格式不正确" }));
             }

@@ -12,29 +12,23 @@ namespace MyBlog.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class UserInfo
+    public partial class ArticleInfo
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public UserInfo()
+        public ArticleInfo()
         {
-            this.ArticleInfo = new HashSet<ArticleInfo>();
             this.CommentInfo = new HashSet<CommentInfo>();
         }
     
         public int Id { get; set; }
-        public string UName { get; set; }
-        public string UPwd { get; set; }
-        public string UNickName { get; set; }
-        public string UHeadPhoto { get; set; }
-        public System.DateTime URegTime { get; set; }
-        public int ULevel { get; set; }
-        public int Active { get; set; }
-        public string validateCode { get; set; }
-        public string Email { get; set; }
+        public int UserId { get; set; }
+        public string ArticleTitle { get; set; }
+        public string ArticleContent { get; set; }
+        public System.DateTime PubTime { get; set; }
+        public int ReadCount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ArticleInfo> ArticleInfo { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CommentInfo> CommentInfo { get; set; }
+        public virtual UserInfo UserInfo { get; set; }
     }
 }

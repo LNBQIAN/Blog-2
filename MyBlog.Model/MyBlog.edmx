@@ -5,6 +5,27 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="MyBlogModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ArticleInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ArticleTitle" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ArticleContent" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PubTime" Type="datetime" Nullable="false" />
+          <Property Name="ReadCount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CommentInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ArticleId" Type="int" Nullable="false" />
+          <Property Name="CommentContent" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CommentTime" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="UserInfo">
           <Key>
             <PropertyRef Name="Id" />
@@ -20,50 +41,200 @@
           <Property Name="validateCode" Type="nvarchar" MaxLength="50" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <Association Name="FK_ArticleInfoCommentInfo">
+          <End Role="ArticleInfo" Type="Self.ArticleInfo" Multiplicity="1" />
+          <End Role="CommentInfo" Type="Self.CommentInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ArticleInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommentInfo">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserInfoArticleInfo">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
+          <End Role="ArticleInfo" Type="Self.ArticleInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ArticleInfo">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserInfoCommentInfo">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
+          <End Role="CommentInfo" Type="Self.CommentInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommentInfo">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="MyBlogModelStoreContainer">
+          <EntitySet Name="ArticleInfo" EntityType="Self.ArticleInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CommentInfo" EntityType="Self.CommentInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ArticleInfoCommentInfo" Association="Self.FK_ArticleInfoCommentInfo">
+            <End Role="ArticleInfo" EntitySet="ArticleInfo" />
+            <End Role="CommentInfo" EntitySet="CommentInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserInfoArticleInfo" Association="Self.FK_UserInfoArticleInfo">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="ArticleInfo" EntitySet="ArticleInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserInfoCommentInfo" Association="Self.FK_UserInfoCommentInfo">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="CommentInfo" EntitySet="CommentInfo" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MyBlogModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MyBlogEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ArticleInfo" EntityType="MyBlogModel.ArticleInfo" />
+          <EntitySet Name="CommentInfo" EntityType="MyBlogModel.CommentInfo" />
+          <EntitySet Name="UserInfo" EntityType="MyBlogModel.UserInfo" />
+          <AssociationSet Name="FK_ArticleInfoCommentInfo" Association="MyBlogModel.FK_ArticleInfoCommentInfo">
+            <End Role="ArticleInfo" EntitySet="ArticleInfo" />
+            <End Role="CommentInfo" EntitySet="CommentInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserInfoArticleInfo" Association="MyBlogModel.FK_UserInfoArticleInfo">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="ArticleInfo" EntitySet="ArticleInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserInfoCommentInfo" Association="MyBlogModel.FK_UserInfoCommentInfo">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="CommentInfo" EntitySet="CommentInfo" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ArticleInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ArticleTitle" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ArticleContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PubTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReadCount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CommentInfo" Relationship="MyBlogModel.FK_ArticleInfoCommentInfo" FromRole="ArticleInfo" ToRole="CommentInfo" />
+          <NavigationProperty Name="UserInfo" Relationship="MyBlogModel.FK_UserInfoArticleInfo" FromRole="ArticleInfo" ToRole="UserInfo" />
+        </EntityType>
+        <EntityType Name="CommentInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ArticleId" Type="Int32" Nullable="false" />
+          <Property Name="CommentContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CommentTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="ArticleInfo" Relationship="MyBlogModel.FK_ArticleInfoCommentInfo" FromRole="CommentInfo" ToRole="ArticleInfo" />
+          <NavigationProperty Name="UserInfo" Relationship="MyBlogModel.FK_UserInfoCommentInfo" FromRole="CommentInfo" ToRole="UserInfo" />
+        </EntityType>
         <EntityType Name="UserInfo">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UPwd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UNickName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UHeadPhoto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UPwd" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UNickName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UHeadPhoto" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="URegTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ULevel" Type="Int32" Nullable="false" />
           <Property Name="Active" Type="Int32" Nullable="false" />
           <Property Name="validateCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ArticleInfo" Relationship="MyBlogModel.FK_UserInfoArticleInfo" FromRole="UserInfo" ToRole="ArticleInfo" />
+          <NavigationProperty Name="CommentInfo" Relationship="MyBlogModel.FK_UserInfoCommentInfo" FromRole="UserInfo" ToRole="CommentInfo" />
         </EntityType>
-        <EntityContainer Name="MyBlogEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="UserInfo" EntityType="Self.UserInfo" />
-        </EntityContainer>
+        <Association Name="FK_ArticleInfoCommentInfo">
+          <End Type="MyBlogModel.ArticleInfo" Role="ArticleInfo" Multiplicity="1" />
+          <End Type="MyBlogModel.CommentInfo" Role="CommentInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ArticleInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommentInfo">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserInfoArticleInfo">
+          <End Type="MyBlogModel.UserInfo" Role="UserInfo" Multiplicity="1" />
+          <End Type="MyBlogModel.ArticleInfo" Role="ArticleInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ArticleInfo">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserInfoCommentInfo">
+          <End Type="MyBlogModel.UserInfo" Role="UserInfo" Multiplicity="1" />
+          <End Type="MyBlogModel.CommentInfo" Role="CommentInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommentInfo">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="MyBlogModelStoreContainer" CdmEntityContainer="MyBlogEntities">
+          <EntitySetMapping Name="ArticleInfo">
+            <EntityTypeMapping TypeName="MyBlogModel.ArticleInfo">
+              <MappingFragment StoreEntitySet="ArticleInfo">
+                <ScalarProperty Name="ReadCount" ColumnName="ReadCount" />
+                <ScalarProperty Name="PubTime" ColumnName="PubTime" />
+                <ScalarProperty Name="ArticleContent" ColumnName="ArticleContent" />
+                <ScalarProperty Name="ArticleTitle" ColumnName="ArticleTitle" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CommentInfo">
+            <EntityTypeMapping TypeName="MyBlogModel.CommentInfo">
+              <MappingFragment StoreEntitySet="CommentInfo">
+                <ScalarProperty Name="CommentTime" ColumnName="CommentTime" />
+                <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="UserInfo">
             <EntityTypeMapping TypeName="MyBlogModel.UserInfo">
               <MappingFragment StoreEntitySet="UserInfo">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="UName" ColumnName="UName" />
-                <ScalarProperty Name="UPwd" ColumnName="UPwd" />
-                <ScalarProperty Name="UNickName" ColumnName="UNickName" />
-                <ScalarProperty Name="UHeadPhoto" ColumnName="UHeadPhoto" />
-                <ScalarProperty Name="URegTime" ColumnName="URegTime" />
-                <ScalarProperty Name="ULevel" ColumnName="ULevel" />
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="validateCode" ColumnName="validateCode" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="validateCode" ColumnName="validateCode" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="ULevel" ColumnName="ULevel" />
+                <ScalarProperty Name="URegTime" ColumnName="URegTime" />
+                <ScalarProperty Name="UHeadPhoto" ColumnName="UHeadPhoto" />
+                <ScalarProperty Name="UNickName" ColumnName="UNickName" />
+                <ScalarProperty Name="UPwd" ColumnName="UPwd" />
+                <ScalarProperty Name="UName" ColumnName="UName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
