@@ -183,6 +183,7 @@
     <Content Include="Content\layer\skin\layer.ext.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\ajaxfileupload.js" />
     <Content Include="Scripts\Blog\Base.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
@@ -9,6 +10,7 @@ using System.Web.Mvc;
 using MyBlog.IBLL;
 using MyBlog.Model;
 using MyBlog.WebUI.Filter;
+using Newtonsoft.Json;
 
 namespace MyBlog.WebUI.Controllers
 {
@@ -396,11 +398,11 @@ namespace MyBlog.WebUI.Controllers
         }
         [HttpPost]
         [IsAdminActionFilter]
-        public ActionResult Edit(UserInfo userInfo,string uPwd2,string uName2,string uNickName2, string Email2)
+        public ActionResult Edit(UserInfo userInfo, string uPwd2, string uName2, string uNickName2, string email2)
         {
             #region 判断对象里的值有没有被修改,被修改的话，需要验证参数。密码被修改，需要md5加密
             //用户名被修改
-            if (userInfo.UName !=uName2)
+            if (userInfo.UName != uName2)
             {
                 //判断用户名
                 if (!Regex.IsMatch(userInfo.UName, @"^[a-zA-Z][a-zA-Z0-9]{3,11}$"))
@@ -439,7 +441,7 @@ namespace MyBlog.WebUI.Controllers
                 }
             }
             //邮箱被修改
-            if (userInfo.Email != Email2)
+            if (userInfo.Email != email2)
             {
                 //判断邮箱
                 if (!Regex.IsMatch(userInfo.Email, @"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?"))
@@ -453,7 +455,7 @@ namespace MyBlog.WebUI.Controllers
                 }
             }
             #endregion
-            
+
             #region 更新
             if (UserInfoService.Update(userInfo))
             {
@@ -467,7 +469,112 @@ namespace MyBlog.WebUI.Controllers
         }
         #endregion
 
+        #region 上传头像(登陆后可以操作)
+        /// <summary>
+        /// 上传头像(登陆后可以操作)
+        /// </summary>
+        /// <param name="uHeadPhoto"></param>
+        /// <param name="id">用户id</param>
+        /// <returns></returns>
+        [IsLoginActionFilter]
+        public ActionResult UploadHeadPhoto(HttpPostedFileBase uHeadPhoto,int id)
+        {
+            #region 对文件进行判断
+            if (uHeadPhoto == null)
+            {
+                return Content(JsonConvert.SerializeObject(new { status = "no", msg = "上传头像不能为空" }));
+            }
+            //获取文件扩展名
+            string fileExtName = Path.GetExtension(uHeadPhoto.FileName).ToUpper();
 
+            if (fileExtName != ".BMP" && fileExtName != ".JPEG" && fileExtName != ".PNG" && fileExtName != ".JPG")
+            {
+                return Content(JsonConvert.SerializeObject(new { status = "no", msg = "上传头像格式不正确" }));
+            }
+            //判断文件头
+            if (!IsPicture(uHeadPhoto))
+            {
+                return Content(JsonConvert.SerializeObject(new { status = "no", msg = "上传头像格式不正确" }));
+            }
+            #endregion
 
+            #region 对图片进行保存
+            //图片保存目录
+            string directoryPath = "/UserPhoto/用户编号" +id;
+            //目录不存在，创建
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(Request.MapPath(directoryPath));
+            }
+            //保存
+            string fileFullName = "/" +DateTime.Now.ToString("yyyyMMddHHmmss") + fileExtName;
+            uHeadPhoto.SaveAs(Request.MapPath(directoryPath + fileFullName));
+            //判断保存的文件是否存在
+            if (System.IO.File.Exists(Request.MapPath(directoryPath + fileFullName)))
+            {
+                return Content(JsonConvert.SerializeObject(new { status = "ok", msg = "上传成功", ImgPath = directoryPath + fileFullName }));
+            }
+            else
+            {
+                return Content(JsonConvert.SerializeObject(new { status = "no", msg = "上传失败", ImgPath = directoryPath + fileFullName }));
+            }
+            #endregion
+        }
+        /// <summary>
+        /// 完成对数据库头像图片路径的修改
+        /// </summary>
+        /// <param name="id">用户id</param>
+        /// <param name="ImgPath">头像图片相对路径</param>
+        /// <returns></returns>
+        [IsLoginActionFilter]
+        public ActionResult EditHeadPhoto(int id,string ImgPath)
+        {
+            UserInfo userInfo = UserInfoService.GetModels(p => p.Id == id).FirstOrDefault();
+            if (userInfo == null)
+            {
+                return Json(new { status = "no", msg = "当前用户不存在" });
+            }
+            //判断当前图片是否存在
+            if (!System.IO.File.Exists(Request.MapPath(ImgPath)))
+            {
+                return Json(new { status = "no", msg = "头像不存在" });
+            }
+            userInfo.UHeadPhoto = ImgPath;
+            if (UserInfoService.Update(userInfo))
+            {
+                return Json(new { status = "ok", msg = "保存成功" });
+            }
+            else
+            {
+                return Json(new { status = "no", msg = "保存失败" });
+            }
+        }
+        /// <summary>
+        /// 根据文件头判断上传的文件类型
+        /// </summary>
+        /// <param name="pf">HttpPostedFile</param>
+        /// <returns></returns>
+        private bool IsPicture(HttpPostedFileBase pf)
+        {
+            try
+            {
+                string fileClass = pf.InputStream.ReadByte().ToString();
+                fileClass += pf.InputStream.ReadByte().ToString();
+                if (fileClass == "255216" || fileClass == "7173" || fileClass == "13780" || fileClass == "6677")
+                //255216是jpg;7173是gif;6677是BMP,13780是PNG;7790是exe,8297是rar 
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        #endregion
     }
 }

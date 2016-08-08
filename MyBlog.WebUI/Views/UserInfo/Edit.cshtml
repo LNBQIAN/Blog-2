@@ -17,14 +17,14 @@
             <div class="am-panel-bd">
                 <div class="am-g">
                     <div class="am-u-md-4">
-                        <img class="am-circle am-img-thumbnail" src="@Model.UHeadPhoto" alt="" />
+                        <img id="uHeadPhotoImg" class="am-circle am-img-thumbnail" src="@Model.UHeadPhoto" alt="" />
                     </div>
                     <div class="am-u-md-8">
-                        <form class="am-form">
+                        <form class="am-form" action="javascript:void(0);">
                             <div class="am-form-group">
-                                <input type="file" id="user-pic">
+                                <input type="file" id="uHeadPhoto" name="uHeadPhoto">
                                 <p class="am-form-help">请选择要上传的文件...</p>
-                                <button type="button" class="am-btn am-btn-primary am-btn-xs">保存</button>
+                                <button id="btnPhotoEdit" type="button" class="am-btn am-btn-primary am-btn-xs">保存</button>
                             </div>
                         </form>
                     </div>
@@ -35,13 +35,13 @@
 
     <div class="am-u-sm-12 am-u-md-8 am-u-md-pull-4">
         <form id="EditForm" class="am-form am-form-horizontal" action="javascript:void(0);">
-            <input type="hidden" name="Id" value="@Model.Id"/>
+            <input type="hidden" id="userId" name="Id" value="@Model.Id" />
             <input type="hidden" name="validateCode" value="@Model.validateCode" />
-            <input type="hidden" name="UHeadPhoto" value="@Model.UHeadPhoto"/>
-            <input type="hidden" name="uPwd2" value="@Model.UPwd"/>
-            <input type="hidden" name="uName2" value="@Model.UName"/>
-            <input type="hidden" name="uNickName2" value="@Model.UNickName"/>
-            <input type="hidden" name="Email2" value="@Model.Email" />
+            <input type="hidden" name="UHeadPhoto" value="@Model.UHeadPhoto" />
+            <input type="hidden" name="uPwd2" value="@Model.UPwd" />
+            <input type="hidden" name="uName2" value="@Model.UName" />
+            <input type="hidden" name="uNickName2" value="@Model.UNickName" />
+            <input type="hidden" name="email2" value="@Model.Email" />
             <div class="am-form-group">
                 <label for="UName" class="am-u-sm-3 am-form-label">用户名</label>
                 <div class="am-u-sm-9">
@@ -83,28 +83,36 @@
                     <select data-am-selected id="ULevel" name="ULevel">
                         @{
                             int level;
-                            if (Model.ULevel == (int) MyBlog.Model.Enum.UserInfoLevel.Admin)
+                            if (Model.ULevel == (int)MyBlog.Model.Enum.UserInfoLevel.Admin)
                             {
                                 <option value="@{
                                                    level = (int) MyBlog.Model.Enum.UserInfoLevel.Admin;
                                                    @level
-                                               }" selected> 管理员 </option>
+                                               }" selected>
+                                    管理员
+                                </option>
                                 <option value="@{
                                                    level = (int) MyBlog.Model.Enum.UserInfoLevel.OrdinaryUser;
                                                    @level
-                                               }">普通用户</option>
-                            }
-                            else
-                            {
-                                <option value="@{
+                                               }">
+                                    普通用户
+                                </option>
+    }
+    else
+    {
+        <option value="@{
                                                    level = (int) MyBlog.Model.Enum.UserInfoLevel.Admin;
                                                    @level
-                                               }"> 管理员 </option>
-                                <option value="@{
+                                               }">
+            管理员
+        </option>
+        <option value="@{
                                                    level = (int) MyBlog.Model.Enum.UserInfoLevel.OrdinaryUser;
                                                    @level
-                                               }" selected>普通用户</option>
-                            }
+                                               }" selected>
+            普通用户
+        </option>
+    }
                         }
                     </select>
                 </div>
@@ -116,28 +124,36 @@
                     <select data-am-selected id="Active" name="Active">
                         @{
                             int active;
-                            if (Model.Active == (int) MyBlog.Model.Enum.UserInfoActive.Active)
+                            if (Model.Active == (int)MyBlog.Model.Enum.UserInfoActive.Active)
                             {
                                 <option value="@{
                                                    active = (int) MyBlog.Model.Enum.UserInfoActive.Active;
                                                    @active
-                                               }" selected> 已激活 </option>
+                                               }" selected>
+                                    已激活
+                                </option>
                                 <option value="@{
                                                    active = (int) MyBlog.Model.Enum.UserInfoActive.NoActive;
                                                    @active
-                                               }">未激活</option>
-                            }
-                            else
-                            {
-                                <option value="@{
+                                               }">
+                                    未激活
+                                </option>
+    }
+    else
+    {
+        <option value="@{
                                                    active = (int) MyBlog.Model.Enum.UserInfoActive.Active;
                                                    @active
-                                               }"> 已激活 </option>
-                                <option value="@{
+                                               }">
+            已激活
+        </option>
+        <option value="@{
                                                    active = (int) MyBlog.Model.Enum.UserInfoActive.NoActive;
                                                    @active
-                                               }" selected>未激活</option>
-                            }
+                                               }" selected>
+            未激活
+        </option>
+    }
                         }
                     </select>
                 </div>
@@ -153,18 +169,95 @@
 </div>
 
 <script>
-    onload = function() {
+    onload = function () {
         //为保存修改按钮注册点击事件
-        $("#btnEdit").click(function() {
-            $.post('@Url.Action("Edit","UserInfo")', $("#EditForm").serialize(), function(data) {
+        $("#btnEdit").click(function () {
+            if (CheckData() == false) {
+                return;
+            }
+            $.post('@Url.Action("Edit","UserInfo")', $("#EditForm").serialize(), function (data) {
                 if (data.status == "ok") {
                     layer.msg(data.msg);
-                    //修改成功后刷新页面
-                    window.location.reload();
+                    //修改成功，一秒后刷新页面
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
                 } else {
                     layer.msg(data.msg);
                 }
             });
+        });
+        //为上传头像文本域注册内容改变事件
+        $("#uHeadPhoto").change(function () {
+            UploadImg();
+        });
+        //为保存头像按钮注册点击事件
+        $("#btnPhotoEdit").click(function () {
+            //图片路径是空的
+            if ($("#uHeadPhotoImg").attr("src").length <= 0) {
+                return;
+            }
+            $.post('@Url.Action("EditHeadPhoto","UserInfo")', { id: $("#userId").val(), ImgPath: $("#uHeadPhotoImg").attr("src") }, function (data) {
+                if (data.status == "ok") {
+                    layer.msg(data.msg);
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        });
+    };
+
+    //检查数据正确性
+    CheckData = function () {
+        var isOk = true;
+        //判断用户名
+        if (CheckUName($("#UName").val()) == false) {
+            layer.msg("用户名格式不正确");
+            isOk = false;
+        }
+        //判断密码 这里读取出来的就是md5加密过的，这里判断格式的话，永远是不正确的，判断不为空就行了，交给服务端判断格式
+        if ($("#UPwd").val().length <= 0) {
+            isOk = false;
+            layer.msg("密码格式不正确");
+        }
+        //判断昵称
+        if (CheckUNickName($("#UNickName").val()) == false) {
+            isOk = false;
+            layer.msg("昵称格式不正确");
+        }
+        //判断邮箱
+        if (CheckEmail($("#Email").val()) == false) {
+            isOk = false;
+            layer.msg("邮箱格式不正确");
+        }
+        return isOk;
+    }
+    //上传头像
+    UploadImg = function() {
+        if ($("#uHeadPhoto").val().length <= 0) {
+            return;
+        };
+        //执行异步上传
+        $.ajaxFileUpload({
+            url: '@Url.Action("UploadHeadPhoto","UserInfo")', //用于文件上传的服务器端请求地址
+            type: 'post',
+            data: { id: $("#userId").val() },
+            secureuri: false, //是否需要安全协议，一般设置为false
+            fileElementId: 'uHeadPhoto', //文件上传域的ID
+            dataType: 'json', //返回值类型 一般设置为json
+            success: function(data) //服务器成功响应处理函数
+            {
+                //由于ajaxFileUpload把原来的file元素替换成新的file元素，所以之前绑定的change事件就失效了，需要重新绑定一下
+                $("#uHeadPhoto").change(function () {
+                    UploadImg();
+                });
+                if (data.status == "ok") {
+                    //更改头像图片路径
+                    $("#uHeadPhotoImg").attr("src", data.ImgPath);
+                } else {
+                    layer.msg(data.msg);
+                }
+            }
         });
     };
 </script>
