@@ -54,6 +54,9 @@
     <Compile Include="ArticleInfo.cs">
       <DependentUpon>MyBlog.tt</DependentUpon>
     </Compile>
+    <Compile Include="ArticleType.cs">
+      <DependentUpon>MyBlog.tt</DependentUpon>
+    </Compile>
     <Compile Include="CommentInfo.cs">
       <DependentUpon>MyBlog.tt</DependentUpon>
     </Compile>

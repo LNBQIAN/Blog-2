@@ -15,6 +15,15 @@
           <Property Name="ArticleContent" Type="nvarchar(max)" Nullable="false" />
           <Property Name="PubTime" Type="datetime" Nullable="false" />
           <Property Name="ReadCount" Type="int" Nullable="false" />
+          <Property Name="ArticleTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ArticleType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ParentId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="CommentInfo">
           <Key>
@@ -25,6 +34,7 @@
           <Property Name="ArticleId" Type="int" Nullable="false" />
           <Property Name="CommentContent" Type="nvarchar(max)" Nullable="false" />
           <Property Name="CommentTime" Type="datetime" Nullable="false" />
+          <Property Name="ParentId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="UserInfo">
           <Key>
@@ -50,6 +60,18 @@
             </Principal>
             <Dependent Role="CommentInfo">
               <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ArticleType_ArticleInfo">
+          <End Role="ArticleType" Type="Self.ArticleType" Multiplicity="1" />
+          <End Role="ArticleInfo" Type="Self.ArticleInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ArticleType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ArticleInfo">
+              <PropertyRef Name="ArticleTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -79,11 +101,16 @@
         </Association>
         <EntityContainer Name="MyBlogModelStoreContainer">
           <EntitySet Name="ArticleInfo" EntityType="Self.ArticleInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ArticleType" EntityType="Self.ArticleType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CommentInfo" EntityType="Self.CommentInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_ArticleInfoCommentInfo" Association="Self.FK_ArticleInfoCommentInfo">
             <End Role="ArticleInfo" EntitySet="ArticleInfo" />
             <End Role="CommentInfo" EntitySet="CommentInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ArticleType_ArticleInfo" Association="Self.FK_ArticleType_ArticleInfo">
+            <End Role="ArticleType" EntitySet="ArticleType" />
+            <End Role="ArticleInfo" EntitySet="ArticleInfo" />
           </AssociationSet>
           <AssociationSet Name="FK_UserInfoArticleInfo" Association="Self.FK_UserInfoArticleInfo">
             <End Role="UserInfo" EntitySet="UserInfo" />
@@ -100,11 +127,16 @@
       <Schema Namespace="MyBlogModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="MyBlogEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ArticleInfo" EntityType="MyBlogModel.ArticleInfo" />
+          <EntitySet Name="ArticleType" EntityType="MyBlogModel.ArticleType" />
           <EntitySet Name="CommentInfo" EntityType="MyBlogModel.CommentInfo" />
           <EntitySet Name="UserInfo" EntityType="MyBlogModel.UserInfo" />
           <AssociationSet Name="FK_ArticleInfoCommentInfo" Association="MyBlogModel.FK_ArticleInfoCommentInfo">
             <End Role="ArticleInfo" EntitySet="ArticleInfo" />
             <End Role="CommentInfo" EntitySet="CommentInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ArticleType_ArticleInfo" Association="MyBlogModel.FK_ArticleType_ArticleInfo">
+            <End Role="ArticleType" EntitySet="ArticleType" />
+            <End Role="ArticleInfo" EntitySet="ArticleInfo" />
           </AssociationSet>
           <AssociationSet Name="FK_UserInfoArticleInfo" Association="MyBlogModel.FK_UserInfoArticleInfo">
             <End Role="UserInfo" EntitySet="UserInfo" />
@@ -125,8 +157,19 @@
           <Property Name="ArticleContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PubTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ReadCount" Type="Int32" Nullable="false" />
+          <Property Name="ArticleTypeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="CommentInfo" Relationship="MyBlogModel.FK_ArticleInfoCommentInfo" FromRole="ArticleInfo" ToRole="CommentInfo" />
+          <NavigationProperty Name="ArticleType" Relationship="MyBlogModel.FK_ArticleType_ArticleInfo" FromRole="ArticleInfo" ToRole="ArticleType" />
           <NavigationProperty Name="UserInfo" Relationship="MyBlogModel.FK_UserInfoArticleInfo" FromRole="ArticleInfo" ToRole="UserInfo" />
+        </EntityType>
+        <EntityType Name="ArticleType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ParentId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ArticleInfo" Relationship="MyBlogModel.FK_ArticleType_ArticleInfo" FromRole="ArticleType" ToRole="ArticleInfo" />
         </EntityType>
         <EntityType Name="CommentInfo">
           <Key>
@@ -137,6 +180,7 @@
           <Property Name="ArticleId" Type="Int32" Nullable="false" />
           <Property Name="CommentContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CommentTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ParentId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ArticleInfo" Relationship="MyBlogModel.FK_ArticleInfoCommentInfo" FromRole="CommentInfo" ToRole="ArticleInfo" />
           <NavigationProperty Name="UserInfo" Relationship="MyBlogModel.FK_UserInfoCommentInfo" FromRole="CommentInfo" ToRole="UserInfo" />
         </EntityType>
@@ -169,6 +213,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ArticleType_ArticleInfo">
+          <End Type="MyBlogModel.ArticleType" Role="ArticleType" Multiplicity="1" />
+          <End Type="MyBlogModel.ArticleInfo" Role="ArticleInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ArticleType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ArticleInfo">
+              <PropertyRef Name="ArticleTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserInfoArticleInfo">
           <End Type="MyBlogModel.UserInfo" Role="UserInfo" Multiplicity="1" />
           <End Type="MyBlogModel.ArticleInfo" Role="ArticleInfo" Multiplicity="*" />
@@ -193,7 +249,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -202,6 +258,7 @@
           <EntitySetMapping Name="ArticleInfo">
             <EntityTypeMapping TypeName="MyBlogModel.ArticleInfo">
               <MappingFragment StoreEntitySet="ArticleInfo">
+                <ScalarProperty Name="ArticleTypeId" ColumnName="ArticleTypeId" />
                 <ScalarProperty Name="ReadCount" ColumnName="ReadCount" />
                 <ScalarProperty Name="PubTime" ColumnName="PubTime" />
                 <ScalarProperty Name="ArticleContent" ColumnName="ArticleContent" />
@@ -211,9 +268,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ArticleType">
+            <EntityTypeMapping TypeName="MyBlogModel.ArticleType">
+              <MappingFragment StoreEntitySet="ArticleType">
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="CommentInfo">
             <EntityTypeMapping TypeName="MyBlogModel.CommentInfo">
               <MappingFragment StoreEntitySet="CommentInfo">
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
                 <ScalarProperty Name="CommentTime" ColumnName="CommentTime" />
                 <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
                 <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />

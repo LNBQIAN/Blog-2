@@ -5,12 +5,21 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="b2f77c61f77d496da46785c9e3db126d" Name="Diagram1">
-        <EntityTypeShape EntityType="MyBlogModel.ArticleInfo" Width="1.5" PointX="3" PointY="1.375" />
-        <EntityTypeShape EntityType="MyBlogModel.CommentInfo" Width="1.5" PointX="5.25" PointY="1.5" />
+        <EntityTypeShape EntityType="MyBlogModel.ArticleInfo" Width="1.5" PointX="4.625" PointY="1.375" />
+        <EntityTypeShape EntityType="MyBlogModel.ArticleType" Width="1.5" PointX="4.5" PointY="5.5" />
+        <EntityTypeShape EntityType="MyBlogModel.CommentInfo" Width="1.5" PointX="8.375" PointY="1.5" />
         <EntityTypeShape EntityType="MyBlogModel.UserInfo" Width="1.5" PointX="0.75" PointY="1" />
         <AssociationConnector Association="MyBlogModel.FK_ArticleInfoCommentInfo" />
+        <AssociationConnector Association="MyBlogModel.FK_ArticleType_ArticleInfo" />
         <AssociationConnector Association="MyBlogModel.FK_UserInfoArticleInfo" />
-        <AssociationConnector Association="MyBlogModel.FK_UserInfoCommentInfo" />
+        <AssociationConnector Association="MyBlogModel.FK_UserInfoCommentInfo" ManuallyRouted="true" >
+          <ConnectorPoint PointX="2.25" PointY="1.59375" />
+          <ConnectorPoint PointX="2.4701141250000003" PointY="1.59375" />
+          <ConnectorPoint PointX="2.4701141250000003" PointY="0.79791666666666661" />
+          <ConnectorPoint PointX="8.154885875" PointY="0.79791666666666661" />
+          <ConnectorPoint PointX="8.154885875" PointY="1.59375" />
+          <ConnectorPoint PointX="8.375" PointY="1.59375" />
+        </AssociationConnector>
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

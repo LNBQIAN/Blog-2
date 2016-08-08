@@ -12,16 +12,19 @@ namespace MyBlog.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class CommentInfo
+    public partial class ArticleType
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public ArticleType()
+        {
+            this.ArticleInfo = new HashSet<ArticleInfo>();
+        }
+    
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public int ArticleId { get; set; }
-        public string CommentContent { get; set; }
-        public System.DateTime CommentTime { get; set; }
+        public string Title { get; set; }
         public int ParentId { get; set; }
     
-        public virtual ArticleInfo ArticleInfo { get; set; }
-        public virtual UserInfo UserInfo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ArticleInfo> ArticleInfo { get; set; }
     }
 }
