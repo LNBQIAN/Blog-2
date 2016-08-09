@@ -1,0 +1,58 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<link href="~/Content/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.ztree.all-3.5.min.js"></script>
+
+
+<div class="am-cf am-padding am-padding-bottom-0">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">文章分类</strong> / <small>Article Type</small></div>
+</div>
+
+<hr>
+
+<div class="am-g">
+    <div class="am-u-sm-12 am-u-md-6">
+        <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-xs">
+                <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
+                <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
+                <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核</button>
+                <button id="btnDeleteList" type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="am-g">
+    <div class="am-u-sm-12">
+        <div class="am-scrollable-horizontal">
+            <table class="am-table am-table-bordered am-text-nowrap">
+                <tr><td>分类树形图</td></tr>
+                <tr><td><ul id="treeDemo" class="ztree"></ul></td></tr>
+            </table>
+        </div>
+      
+    </div>
+</div>
+<SCRIPT type="text/javascript">
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            beforeClick: function (treeId, treeNode) {
+                alert(treeNode);
+            }
+        }
+    };
+
+    var zNodes =@Html.Raw(ViewBag.zNodes);
+    //  { id: 1, pId: 0, name: "[core] 基本功能 演示", open: true},
+    onload = function () {
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    };
+</SCRIPT>
