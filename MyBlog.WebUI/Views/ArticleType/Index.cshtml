@@ -3,7 +3,8 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-<link href="~/Content/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+
+<link href="~/Content/metroStyle/metroStyle.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.ztree.all-3.5.min.js"></script>
 
 
@@ -17,9 +18,7 @@
     <div class="am-u-sm-12 am-u-md-6">
         <div class="am-btn-toolbar">
             <div class="am-btn-group am-btn-group-xs">
-                <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
-                <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
-                <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核</button>
+                <button type="button" class="am-btn am-btn-default" onclick="$('#AddArticleTyleDiv').modal();"><span class="am-icon-plus"></span> 新增一级分类</button>
                 <button id="btnDeleteList" type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
             </div>
         </div>
@@ -33,9 +32,66 @@
                 <tr><td><ul id="treeDemo" class="ztree"></ul></td></tr>
             </table>
         </div>
-      
     </div>
 </div>
+<!--存放isParent的隐藏域-->
+<input type="hidden" value="" id="isParent" />
+<!--存放treeNodeId的隐藏域-->
+<input type="hidden" value="" id="treeNodeId"/>
+<!--存放parentId的隐藏域-->
+<input type="hidden" value="" id="parentId" />
+<!--添加文章分类start-->
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="AddArticleTyleDiv">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">
+            添加文章分类
+            <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+        </div>
+        <div class="am-modal-bd">
+            <div class="am-form-group">
+                <label for="ArticleTypeTItle">标题</label>
+                <input type="text" class="" id="ArticleTypeTItle" placeholder="文章分类标题">
+                <button type="button" id="btnAdd" class="am-btn am-btn-secondary am-radius">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--添加文章分类end-->
+<!--修改文章分类start-->
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="UpdateArticleTyleDiv">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">
+            修改文章分类
+            <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+        </div>
+        <div class="am-modal-bd">
+            <div class="am-form-group">
+                <label for="ArticleTypeTItle">标题</label>
+                <input type="text" class="" id="ArticleTypeTItle1" placeholder="文章分类标题">
+                <button type="button" id="btnUpdate" class="am-btn am-btn-secondary am-radius">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--修改文章分类end-->
+
+
+<!--询问窗口start-->
+<div class="am-modal am-modal-prompt" tabindex="-1" id="my-prompt">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">请输入操作指令</div>
+        <div class="am-modal-bd">
+            1.添加 2.修改 3.删除
+            <input type="text" class="am-modal-prompt-input">
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+            <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+        </div>
+    </div>
+</div>
+<!--询问窗口end-->
+
 <SCRIPT type="text/javascript">
     var setting = {
         data: {
@@ -45,7 +101,7 @@
         },
         callback: {
             beforeClick: function (treeId, treeNode) {
-                alert(treeNode);
+                Do(treeNode.id,treeNode.isParent);
             }
         }
     };
@@ -54,5 +110,110 @@
     //  { id: 1, pId: 0, name: "[core] 基本功能 演示", open: true},
     onload = function () {
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        //为添加文章分类按钮增加点击事件
+        $("#btnAdd").click(function() {
+            var pid = $("#treeNodeId").val();
+            //如果pid没有值 就是0代表一级分类
+            if (pid.length<=0) {
+                pid = 0;
+            }
+            if ($("#ArticleTypeTItle").val().length<=0) {
+                return;
+            }
+            AddArticleType(pid,$("#ArticleTypeTItle").val());
+        });
+        //为修改文章分类按钮增加点击事件
+        $("#btnUpdate").click(function() {
+            var id = $("#treeNodeId").val();
+            if ($("#ArticleTypeTItle1").val().length<=0) {
+                return;
+            }
+            UpdateArticleType(id ,$("#parentId").val(),$("#ArticleTypeTItle1").val());
+        });
     };
+    //$('#your-modal').modal(options);
+
+    //选择做什么操作的函数. treeNodeId 就是当前触发点击事件的节点id属性.(也就是数据库里的Id列)
+    //isParent:是不是父节点
+    Do = function(treeNodeId,isParent) {
+        $("#treeNodeId").val(treeNodeId);
+        $("#isParent").val(isParent);
+        //弹出询问层。
+        $('#my-prompt').modal({
+            relatedTarget: this,
+            onConfirm: function(e) {
+               //获取输入内容
+                var temp = e.data;
+                if (temp.length<=0) {
+                    return;
+                }
+                //1.添加 2.修改 3.删除
+                var id = $("#treeNodeId").val();
+                if (temp=="1") {
+                    $('#AddArticleTyleDiv').modal();
+                }else if (temp=="2") {
+                    GetArticleType(id);
+                    $('#UpdateArticleTyleDiv').modal();
+                } else if (temp == "3") {
+                    if ($("#isParent").val()=="true") {
+                        layer.msg("该分类下还有子分类，无法删除");
+                        return;
+                    }
+                    DeleteArticleType(id);
+                } else {
+                    layer.msg("输入内容有误,只能是1 , 2 , 3");
+                }
+            }
+        });
+    };
+
+    //添加文章分类
+    AddArticleType = function(pid,title) {
+        $.post('@Url.Action("Add","ArticleType")', { ParentId: pid, Title: title}, function(data) {
+            $("#treeNodeId").val('');
+            if (data.status=="ok") {
+                layer.msg(data.msg);
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                layer.msg(data.msg);
+            }
+        });
+    };
+    //更新文章分类
+    UpdateArticleType = function(id,pid,title) {
+        $.post('@Url.Action("Update","ArticleType")', { Id:id,parentId: pid, title: title}, function(data) {
+            $("#treeNodeId").val('');
+            if (data.status=="ok") {
+                layer.msg(data.msg);
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                layer.msg(data.msg);
+            }
+        });
+    };
+    //修改前读取数据
+    GetArticleType= function(id) {
+        $.get('@Url.Action("Update","ArticleType")', { id:id}, function(data) {
+            $("#parentId").val(data.ParentId);
+            $("#treeNodeId").val(data.Id);
+            $("#ArticleTypeTItle1").val(data.Title);
+        });
+    }
+    //删除文章分类
+    DeleteArticleType= function(id) {
+        $.post('@Url.Action("Delete","ArticleType")',{id:id}, function(data) {
+            if (data.status=="ok") {
+                layer.msg(data.msg);
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                layer.msg(data.msg);
+            }
+        });
+    }
 </SCRIPT>
