@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IArticleInfoDal.cs" />
     <Compile Include="IArticleTypeDal.cs" />
     <Compile Include="IBaseDal.cs" />
     <Compile Include="IEFDbContext.cs" />

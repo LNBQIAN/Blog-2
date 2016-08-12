@@ -9,6 +9,7 @@
 
 namespace MyBlog.Model
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     
@@ -29,8 +30,11 @@ namespace MyBlog.Model
         public int ArticleTypeId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+    	[JsonIgnore]
         public virtual ICollection<CommentInfo> CommentInfo { get; set; }
+    	[JsonIgnore]
         public virtual ArticleType ArticleType { get; set; }
+    	[JsonIgnore]
         public virtual UserInfo UserInfo { get; set; }
     }
 }

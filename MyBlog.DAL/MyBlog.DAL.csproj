@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArticleInfoDal.cs" />
     <Compile Include="ArticleTypeDal.cs" />
     <Compile Include="BaseDal.cs" />
     <Compile Include="DbContextFactory.cs" />

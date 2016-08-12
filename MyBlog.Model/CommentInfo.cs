@@ -9,6 +9,7 @@
 
 namespace MyBlog.Model
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     
@@ -21,7 +22,9 @@ namespace MyBlog.Model
         public System.DateTime CommentTime { get; set; }
         public int ParentId { get; set; }
     
+    	[JsonIgnore]
         public virtual ArticleInfo ArticleInfo { get; set; }
+    	[JsonIgnore]
         public virtual UserInfo UserInfo { get; set; }
     }
 }

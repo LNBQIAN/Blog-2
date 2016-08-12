@@ -46,6 +46,7 @@ namespace MyBlog.BLLContainer
             //格式：builder.RegisterType<xxxx>().As<Ixxxx>().InstancePerLifetimeScope();
             builder.RegisterType<UserInfoService>().As<IUserInfoService>().InstancePerLifetimeScope();
             builder.RegisterType<ArticleTypeService>().As<IArticleTypeService>().InstancePerLifetimeScope();
+            builder.RegisterType<ArticleInfoService>().As<IArticleInfoService>().InstancePerLifetimeScope();
             container = builder.Build();
         }
     }

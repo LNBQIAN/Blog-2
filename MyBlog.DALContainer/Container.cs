@@ -47,6 +47,7 @@ namespace MyBlog.DALContainer
             builder.RegisterType<EFDbContext>().As<IEFDbContext>().InstancePerLifetimeScope();
             builder.RegisterType<UserInfoDal>().As<IUserInfoDal>().InstancePerLifetimeScope();
             builder.RegisterType<ArticleTypeDal>().As<IArticleTypeDal>().InstancePerLifetimeScope();
+            builder.RegisterType<ArticleInfoDal>().As<IArticleInfoDal>().InstancePerLifetimeScope();
             container = builder.Build();
         }
     }

@@ -1,0 +1,149 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="am-cf am-padding am-padding-bottom-0">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">文章列表</strong> / <small>Article List</small></div>
+</div>
+
+<hr>
+
+<div class="am-g">
+    <div class="am-u-sm-12 am-u-md-6">
+        <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-xs">
+                <button type="button" class="am-btn am-btn-default" onclick="window.location.href = '@Url.Action("Add","ArticleInfo")';"><span class="am-icon-plus"></span> 新增</button>
+                <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
+                <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核</button>
+                <button id="btnDeleteList" type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="am-g">
+    <div class="am-u-sm-12">
+        <form class="am-form" action="javascript:void(0);">
+            <div class="am-scrollable-horizontal">
+                <table class="am-table am-table-striped am-table-hover table-main">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="checkAll" /></th>
+                            <th>ID</th>
+                            <th>分类</th>
+                            <th>标题</th>
+                            <th>作者</th>
+                            <th class="am-hide-sm-only">阅读次数</th>
+                            <th class="am-hide-sm-only">时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ArticleInfoTBody"></tbody>
+                </table>
+            </div>
+            <!--页面条-->
+            <div class="am-cf">
+                <div class="am-fr">
+                    <ul id="pageBarUl" class="am-pagination"></ul>
+                </div>
+            </div>
+            <hr />
+        </form>
+    </div>
+</div>
+<script>
+    onload = function() {
+        GetArticleInfoList(1);
+        //为全选checkbox注册点击事件
+        $("#checkAll").click(function () {
+            //如果当全选框被选中，那么所有的checkbox都选中，如果全选框没有选中,那么所有的checkbox都不选中
+            if ($(this).prop('checked')) {
+                $("#ArticleInfoTBody input[type='checkbox']").prop('checked', true);
+            } else {
+                $("#ArticleInfoTBody input[type='checkbox']").prop('checked', false);
+            }
+        });
+        //为删除多个的按钮注册点击事件
+        $("#btnDeleteList").click(function () {
+            //先判断checkbox选中数量
+            var checkedCount = 0;
+            //要删除数据的id编号
+            var idstr = "";
+            $("#ArticleInfoTBody input[type='checkbox']").each(function () {
+                if ($(this).prop("checked")) {
+                    //当前checkbox选中，选中总数加1
+                    checkedCount = checkedCount + 1;
+                    idstr = idstr + $(this).attr("articleId") + ",";
+                }
+            });
+
+            if (checkedCount <= 0) {
+                layer.msg("请选择一条数据");
+                return;
+            }
+            //idStr  1,2,3,4,5, 把最后一个逗号去掉，截取1，2，3，4，5
+            idstr = idstr.substring(0, idstr.length - 1);
+            //删除
+            Delete(idstr);
+        });
+    };
+    //获取数据
+    GetArticleInfoList = function (pageIndex) {
+        $.post('@Url.Action("GetArticleList", "ArticleInfo")', { pageIndex: pageIndex }, function (data) {
+            //遍历文章数据,为表格填充数据
+            //填充前先清空之前的数据
+            $("#ArticleInfoTBody").empty();
+            $("#pageBarUl").empty();
+            //开始遍历
+            data = $.parseJSON(data);
+            $.each(data.articleList, function (index, item) {
+                $("#ArticleInfoTBody").append("<tr>" +
+                    "<td><input  articleId='" + item.Id + "'  type='checkbox'/></td>" +
+                    "<td>" + item.Id + "</td>" +
+                    "<td>" + item.ArticleTypeName + "</td>" +
+                    "<td>" + item.Title + "</td>" +
+                    "<td><a href='@Url.Action("Edit","UserInfo")?id=" + item.UserInfo.Id + "'>" + item.UserInfo.UNickName + "</a></td>" +
+                    "<td class='am-hide-sm-only'>" + item.ReadCount + "</td>" +
+                    "<td class='am-hide-sm-only'>" + item.PubTime + "</td>" +
+                    "<td><div class='am-btn-toolbar'><div class='am-btn-group am-btn-group-xs'> " +
+                    "<button onclick='SkipToEdit(" + item.Id + ")' class='am-btn am-btn-default am-btn-xs am-text-secondary'><span class='am-icon-pencil-square-o'></span> 编辑</button> " +
+                    "<button class='am-btn am-btn-default am-btn-xs am-hide-sm-only'><span class='am-icon-copy'></span> 复制</button>  " +
+                    "<button  onclick='Delete(" + item.Id + ");'  class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only'><span class='am-icon-trash-o'></span> 删除</button></div></div></td></tr>");
+            });
+            //为分页UI填充数据
+            $("#pageBarUl").append(data.pageBar);
+            //为pageBarUl下的a标签注册点击事件
+            $("#pageBarUl a").click(function () {
+                //当前a标签 存在pageIndex属性的话
+                if (typeof ($(this).attr('pageIndex')) != "undefined") {
+                    GetArticleInfoList($(this).attr('pageIndex'));
+                }
+            });
+        });
+    };
+    //删除
+    Delete = function (id) {
+        layer.confirm('确定删除?', { icon: 3, title: '提示' }, function () {
+            $.post('@Url.Action("Delete","ArticleInfo")', { idStr: id }, function (data) {
+                if (data.status == "ok") {
+                    layer.msg(data.msg);
+                    //当前页(删除成功后，重新获取这一页的数据)
+                    var pageIndex = GetPageIndex();
+                    GetArticleInfoList(pageIndex);
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        });
+    };
+    //获取当前页
+    GetPageIndex = function () {
+        //分页数据中 有am-active样式类的 li标签下的  a标签的内容  就是当前页
+        var pageIndex = $("#pageBarUl li[class='am-active'] a").text();
+        return pageIndex;
+    }
+</script>
+
+
