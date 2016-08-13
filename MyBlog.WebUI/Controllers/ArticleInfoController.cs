@@ -81,6 +81,7 @@ namespace MyBlog.WebUI.Controllers
         #endregion
 
         #region 添加（管理员访问）
+        [IsAdminActionFilter]
         public ActionResult Add()
         {
             return View();
