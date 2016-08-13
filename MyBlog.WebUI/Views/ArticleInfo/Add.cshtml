@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-
 <div class="am-cf am-padding am-padding-bottom-0">
     <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">添加文章</strong> / <small>Add Article</small></div>
 </div>
@@ -12,19 +11,51 @@
 
 <div class="am-g">
     <div class="am-u-sm-12">
-        <form class="am-form">
-                <div class="am-form-group">
-                    <label for="doc-select-1">下拉多选框</label>
-                    <select id="doc-select-1">
-                        <option value="option1">选项一...</option>
-                        <option value="option2">选项二.....</option>
-                        <option value="option3">选项三........</option>
-                    </select>
-                    <span class="am-form-caret"></span>
-                </div>
-                <p><button type="submit" class="am-btn am-btn-default">提交</button></p>
+        <form class="am-form" id="AddArticleInfoForm">
+            <div class="am-form-group">
+                <label for="selectArticleType1">下拉多选框</label>
+                <select id="selectArticleType1"></select>
+                <span class="am-form-caret"></span>
+            </div>
+            <div id="selectDiv">
+
+            </div>
         </form>
+        <p><button type="button" class="am-btn am-btn-default">提交</button></p>
     </div>
 </div>
+<script>
+    $(function () {
+        GetArticleType(0, "selectArticleType1");
+     
+    });
+    //获取文章分类信息  parentId:父级id selectid:展示数据下拉框的Id
+    var i = 1;
+    GetArticleType = function (parentId, selectId) {
+        $.post('@Url.Action("GetArticleType","ArticleType")', { parentId: parentId }, function (data) {
+            data = $.parseJSON(data);
+            if (data.status == "ok") {
+                if (selectId != "selectArticleType1") {
+                    $("#selectDiv").append('<div class="am-form-group">' +
+                             ' <label for="' + selectId + '">请选择分类</label>' +
+                             ' <select id="' + selectId + '"></select>' +
+                            '<span class="am-form-caret"></span></div>');
+                }
+                //为select填充数据
+                $.each(data.articleTypeList, function (i, item) {
+                    $("#" + selectId).append('<option value="' + item.Id + '">' + item.Title + '</option>');
+                });
+                i = i + 1;
+                GetArticleType($("#" + selectId).val(), 'selectArticleType' + i);
+                //注册改变事件
+                $("#" + selectId).change(function () {
+                    $("#selectDiv").empty();
+                    i = i + 1;
+                    GetArticleType($(this).val(), 'selectArticleType' + i);
+                });
+            }
+        });
+    };
 
+</script>
 
