@@ -144,6 +144,11 @@
         var pageIndex = $("#pageBarUl li[class='am-active'] a").text();
         return pageIndex;
     }
+
+    //跳转到编辑详情页
+    SkipToEdit= function(id) {
+        window.location.href = "@Url.Action("Edit","ArticleInfo")?id="+id;
+    }
 </script>
 
 

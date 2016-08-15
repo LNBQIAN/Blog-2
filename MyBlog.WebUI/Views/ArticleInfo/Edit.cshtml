@@ -1,0 +1,177 @@
+﻿
+@using MyBlog.Model
+@model MyBlog.Model.ArticleInfo
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    @*当前文章所属分类信息*@
+    ArticleType articleType = ViewBag.articleTypeInfo as ArticleType;
+    @*当前文章所属用户信息*@
+    UserInfo userInfo = ViewBag.userInfo as UserInfo;
+}
+<div class="am-cf am-padding am-padding-bottom-0">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">编辑文章</strong> / <small>Edit Article</small></div>
+</div>
+<hr />
+<div class="am-g">
+    <div class="am-u-sm-12">
+        <form class="am-form" id="AddArticleInfoForm" action="javascript:void(0)">
+            <!--显示当前文章所属分类-->
+            <div class="am-form-group">
+                <label>当前所属分类:&nbsp;&nbsp;<span style="color: darkcyan">@articleType.Title</span></label>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a id="btnShowSelect" href="javascript:void(0)">修改</a>
+                <script>
+                    $(function() {
+                        var isShowSelect = false; //表示是否显示文章分类下拉框组
+                        //为显示分类安妮注册点击事件
+                        $("#btnShowSelect").click(function() {
+                            //当前文章分类下拉框组已经是显示状态
+                            if (isShowSelect) {
+                                $("#btnShowSelect").text("修改");
+                                //恢复默认值
+                                $("#selectArticleType1").val("default");
+                                //移除除了第一个外所有的下拉框
+                                $("#selectArticleType1").parent().nextAll().remove();
+                                //不显示下拉框组
+                                $("#selectDiv").css("display", "none");
+                                isShowSelect = false;
+                            } else {
+                                //当前文章分类下拉框组已经是不显示状态
+                                $("#btnShowSelect").text("取消");
+                                //显示下拉框组
+                                $("#selectDiv").css("display", "block");
+                                isShowSelect = true;
+                            }
+                        });
+                    });
+                </script>
+            </div>
+
+            <!--文章分类下拉框-->
+            <div id="selectDiv" style="display: none">
+                <div class="am-form-group">
+                    <label for="selectArticleType1">请选择分类</label>
+                    <select id="selectArticleType1"></select>
+                    <span class="am-form-caret"></span>
+                </div>
+            </div>
+            <!--文章分类下拉框end-->
+            <div class="am-form-group">
+                <label for="ArticleTitle">标题</label>
+                <input type="text" id="ArticleTitle" placeholder="文章标题" value="@Model.ArticleTitle">
+            </div>
+            <div class="am-form-group">
+                <label for="editor">内容</label>
+                <!--编辑器-->
+                <textarea id="editor" name="content" style="width: 100%; height: 100%">@Model.ArticleContent</textarea>
+            </div>
+        </form>
+            <p>
+                <button type="button" id="btnSubmit" class="am-btn am-btn-secondary am-radius">提交</button>
+            </p>
+        </div>
+    </div>
+    <script src="~/Scripts/kindeditor/kindeditor-all-min.js"></script>
+    <script src="~/Scripts/kindeditor/plugins/code/code.js"></script>
+    <script>
+        //编辑器初始化
+        KindEditor.ready(function (K) {
+            window.editor = K.create('#editor', {
+                uploadJson: '@Url.Action("Upload","ArticleInfo")'
+            });
+        });
+
+
+        $(function () {
+            //页面加载完毕时，加载一级分类数据。
+            GetArticleType(0, "selectArticleType1");
+            //为提交按钮注册点击事件
+            $("#btnSubmit").click(function() {
+                EditArticleInfo();
+            });
+        });
+
+
+        //select编号
+        var i = 1;
+        //获取文章分类信息  parentId:父级id selectid:展示数据下拉框的Id
+        GetArticleType = function (parentId, selectId) {
+            $.post('@Url.Action("GetArticleType","ArticleType")', { parentId: parentId }, function (data) {
+                data = $.parseJSON(data);
+                if (data.status == "ok") {
+                    //判断当前selectId是否是第一个。第一个已经存在 无需创建，不是第一个就创建一个select
+                    if (selectId != "selectArticleType1") {
+                        $("#selectDiv").append('<div class="am-form-group">' +
+                            ' <label for="' + selectId + '">请选择分类</label>' +
+                            ' <select id="' + selectId + '"></select>' +
+                            '<span class="am-form-caret"></span></div>');
+                    }
+                    //为select填充数据
+                    //默认项
+                    $("#" + selectId).append('<option value="default">请选择</option>');
+                    //遍历
+                    $.each(data.articleTypeList, function (i, item) {
+                        $("#" + selectId).append('<option value="' + item.Id + '">' + item.Title + '</option>');
+                    });
+                    //注册改变事件
+                    $("#" + selectId).change(function () {
+                        //当前下拉框内容改变时。删除当前下拉框 后面的所有下拉框（这里的select都是包含在div里，所以要先获取父级元素div.）
+                        $(this).parent().nextAll().remove();
+                        //判断当前select的内容 是不是 默认项"请选择"。不是的话，就把当前选择内容的值（parentId）取出来，重新调用GetArticleType方法
+                        if ($(this).val() != "default") {
+                            i = i + 1;
+                            GetArticleType($(this).val(), 'selectArticleType' + i);
+                        }
+                    });
+                }
+            });
+        };
+
+
+        EditArticleInfo = function() {
+            var articleTitle = $("#ArticleTitle").val();
+            var articleContent = editor.html();
+            //获取最后一个select的值
+            var articleTypeId = $("#selectDiv select").last().val();
+            //判断文章标题文章内容是否为空
+            if (articleTitle.length <= 0) {
+                layer.msg("文章标题不能为空");
+                return;
+            }
+            if (articleContent.length <= 0) {
+                layer.msg("文章内容不能为空");
+                return;
+            }
+            //判断文章分类id是否未空
+            if (articleTypeId.length <= 0) {
+                layer.msg("文章分类不能为空");
+                return;
+            } else {
+                //如果不为空，值是default 请选择(默认值),说明没有打开文章分类下拉框组，没有修改文章分类,那么 articleTypeId=原来的文章分类id
+                if (articleTypeId == "default") {
+                    articleTypeId=@articleType.Id;
+                }
+            }
+            $.post('@Url.Action("Edit","ArticleInfo")',
+             {
+                 Id:@Model.Id,
+                 UserId:@userInfo.Id,
+                 ArticleTitle:articleTitle, 
+                 ArticleContent:articleContent, 
+                 ReadCount:@Model.ReadCount,
+                 ArticleTypeId:articleTypeId
+             },function (data) {
+                if (data.status == "ok") {
+                    layer.msg(data.msg);
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        };
+    </script>
