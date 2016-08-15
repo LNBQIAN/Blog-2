@@ -9,5 +9,6 @@ namespace MyBlog.IBLL
 {
     public partial interface IArticleTypeService : IBaseService<ArticleType>
     {
+        bool DeleteArticleType(int id);
     }
 }

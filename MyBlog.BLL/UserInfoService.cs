@@ -12,6 +12,7 @@ namespace MyBlog.BLL
     public partial class UserInfoService : BaseService<UserInfo>, IUserInfoService
     {
         public IUserInfoDal UserInfoDal = DALContainer.Container.Resolve<IUserInfoDal>();
+        public IArticleInfoDal ArticleInfoDal= DALContainer.Container.Resolve<IArticleInfoDal>();
         public override void GetDal()
         {
             Dal = UserInfoDal;
@@ -24,6 +25,12 @@ namespace MyBlog.BLL
             {
                 foreach (var u in userInfos)
                 {
+                    //先删除该用户所有文章
+                    foreach (var articleInfo in u.ArticleInfo.ToList())
+                    {
+                        ArticleInfoDal.Delete(articleInfo);
+                    }
+                    
                     UserInfoDal.Delete(u);
                 }
                 return DbContext.SaveChanges();

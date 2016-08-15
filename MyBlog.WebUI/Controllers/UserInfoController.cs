@@ -79,7 +79,7 @@ namespace MyBlog.WebUI.Controllers
             userInfo.UPwd = Common.MD5Helper.GetMD5String(userInfo.UPwd);// 密码MD5加密
             userInfo.Active = (int)Model.Enum.UserInfoActive.NoActive;//默认未激活状态
             userInfo.ULevel = (int)Model.Enum.UserInfoLevel.OrdinaryUser;//默认是普通用户
-            userInfo.UHeadPhoto = "/UserPhoto/defaultPhoto.jpg";//默认头像
+            userInfo.UHeadPhoto = "/UserFile/defaultPhoto.jpg";//默认头像
             userInfo.URegTime = DateTime.Now;
             string emailVCode = Guid.NewGuid().ToString();//验证用户是否激活需要的验证码
             userInfo.validateCode = emailVCode;
@@ -500,7 +500,7 @@ namespace MyBlog.WebUI.Controllers
 
             #region 对图片进行保存
             //图片保存目录
-            string directoryPath = "/UserPhoto/用户编号" +id;
+            string directoryPath = "/UserFile/用户编号" + id+"/UserPhoto";
             //目录不存在，创建
             if (!Directory.Exists(directoryPath))
             {

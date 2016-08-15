@@ -68,21 +68,13 @@ namespace MyBlog.WebUI.Controllers
         #region 删除文章分类
         public ActionResult Delete(int id)
         {
-            ArticleType articleType = ArticleTypeService.GetModels(p => p.Id == id).FirstOrDefault();
-            if (articleType != null)
+            if (ArticleTypeService.DeleteArticleType(id))
             {
-                if (ArticleTypeService.Delete(articleType))
-                {
-                    return Json(new { status = "ok", msg = "删除成功" }, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json(new { status = "no", msg = "删除失败" }, JsonRequestBehavior.AllowGet);
-                }
+                return Json(new { status = "ok", msg = "删除成功" }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(new { status = "no", msg = "文章分类不存在" }, JsonRequestBehavior.AllowGet);
+                return Json(new { status = "no", msg = "删除失败" }, JsonRequestBehavior.AllowGet);
             }
 
         }
@@ -92,11 +84,11 @@ namespace MyBlog.WebUI.Controllers
         public ActionResult GetArticleType(int parentId)
         {
             var articleTypeList = ArticleTypeService.GetModels(p => p.ParentId == parentId).ToList();
-            if (articleTypeList.Count<=0)
+            if (articleTypeList.Count <= 0)
             {
                 return Content(JsonConvert.SerializeObject(new { status = "no", msg = "没有分类信息" }));
             }
-            return Content(JsonConvert.SerializeObject(new { status = "ok", msg="获取成功", articleTypeList= articleTypeList }));
+            return Content(JsonConvert.SerializeObject(new { status = "ok", msg = "获取成功", articleTypeList = articleTypeList }));
         }
         #endregion
     }
