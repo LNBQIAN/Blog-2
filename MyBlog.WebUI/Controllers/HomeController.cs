@@ -21,5 +21,11 @@ namespace MyBlog.WebUI.Controllers
             }
             return View();
         }
+        #region 获取博客右边显示的内容(因为需要多次使用,所以是部分视图)
+        public ActionResult GetRightView()
+        {
+            return PartialView();
+        }
+        #endregion
     }
 }
