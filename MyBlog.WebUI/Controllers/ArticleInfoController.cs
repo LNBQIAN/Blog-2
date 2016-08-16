@@ -103,6 +103,8 @@ namespace MyBlog.WebUI.Controllers
             }
             articleInfo.UserId = (Session["UserInfo"] as UserInfo).Id;
             articleInfo.PubTime = DateTime.Now;
+            articleInfo.FacePhoto = string.IsNullOrEmpty(articleInfo.FacePhoto) == true ? "/UserFile/defaultPhoto.jpg": articleInfo.FacePhoto;
+
             //默认阅读次数为0
             articleInfo.ReadCount = 0;
             if (ArticleInfoService.Add(articleInfo))
@@ -164,24 +166,28 @@ namespace MyBlog.WebUI.Controllers
             }
             if (!extTable.ContainsKey(dir))
             {
-                return Json(new { error = 1, message = "文件格式不正确" }, JsonRequestBehavior.AllowGet);
+                return Content(JsonConvert.SerializeObject(new {error = 1, message = "文件格式不正确"}));
+                // return Json(new { error = 1, message = "文件格式不正确" }, JsonRequestBehavior.AllowGet);
             }
 
             if (imgFile == null)
             {
-                return Json(new { error = 1, message = "上传文件大小超过限制" }, JsonRequestBehavior.AllowGet);
+                return Content(JsonConvert.SerializeObject(new { error = 1, message = "上传文件大小超过限制" }));
+                //return Json(new { error = 1, message = "上传文件大小超过限制" }, JsonRequestBehavior.AllowGet);
             }
             string fileName = imgFile.FileName;
             string fileExt = Path.GetExtension(fileName).ToLower();
             if (String.IsNullOrEmpty(fileExt) || Array.IndexOf(((String)extTable[dir]).Split(','), fileExt.Substring(1).ToLower()) == -1)
             {
-                return Json(new { error = 1, message = "上传文件扩展名是不允许的扩展名。\n只允许" + ((String)extTable[dir]) + "格式" }, JsonRequestBehavior.AllowGet);
+                 return Content(JsonConvert.SerializeObject(new { error = 1, message = "上传文件扩展名是不允许的扩展名。\n只允许" + ((String)extTable[dir]) + "格式" }));
+                //return Json(new { error = 1, message = "上传文件扩展名是不允许的扩展名。\n只允许" + ((String)extTable[dir]) + "格式" }, JsonRequestBehavior.AllowGet);
             }
             //创建文件夹
             //获取当前登录用户id
             if (Session["UserInfo"] == null)
             {
-                return Json(new { error = 1, message = "未登录" }, JsonRequestBehavior.AllowGet);
+                return Content(JsonConvert.SerializeObject(new { error = 1, message = "未登录" }));
+                //return Json(new { error = 1, message = "未登录" }, JsonRequestBehavior.AllowGet);
             }
             string dirPath = "/UserFile/用户编号" + (Session["UserInfo"] as UserInfo).Id + "/" + dir + "/";
             if (!Directory.Exists(Request.MapPath(dirPath)))
@@ -194,11 +200,13 @@ namespace MyBlog.WebUI.Controllers
             //判断保存的文件是否存在
             if (System.IO.File.Exists(Request.MapPath(dirPath + newFileName)))
             {
-                return Json(new { error = 0, url = dirPath + newFileName }, JsonRequestBehavior.AllowGet);
+                return Content(JsonConvert.SerializeObject(new { error = 0, url = dirPath + newFileName }));
+                //return Json(new { error = 0, url = dirPath + newFileName }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(new { error = 1, message = "上传文件失败" }, JsonRequestBehavior.AllowGet);
+                return Content(JsonConvert.SerializeObject(new { error = 1, message = "上传文件失败" }));
+               // return Json(new { error = 1, message = "上传文件失败" }, JsonRequestBehavior.AllowGet);
             }
         }
         #endregion

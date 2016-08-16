@@ -21,6 +21,19 @@
                 </div>
             </div>
             <!--文章分类下拉框end-->
+            <div class="am-form-group am-form-file">
+                <label for="imgFile">设置文章封面</label>
+                <div>
+                    <button type="button" class="am-btn am-btn-default am-btn-sm">
+                        <i class="am-icon-cloud-upload"></i> 选择要上传的文件
+                    </button>
+                </div>
+                <input type="file" id="imgFile" name="imgFile">
+                <br/>
+                <div>
+                    <img id="articleFacePhotoImg" />
+                </div>
+            </div>
             <div class="am-form-group">
                 <label for="ArticleTitle">标题</label>
                 <input type="text" id="ArticleTitle" placeholder="文章标题">
@@ -39,6 +52,7 @@
 
 <script src="~/Scripts/kindeditor/kindeditor-all-min.js"></script>
 <script src="~/Scripts/kindeditor/plugins/code/code.js"></script>
+<script src="~/Scripts/ajaxfileupload.js"></script>
 <script>
     //编辑器初始化
     KindEditor.ready(function (K) {
@@ -116,8 +130,8 @@
             layer.msg("文章内容不能为空");
             return;
         }
-
-        $.post('@Url.Action("Add","ArticleInfo")', { ArticleTitle:articleTitle, ArticleContent:articleContent, ArticleTypeId:articleTypeId }, function (data) {
+        
+        $.post('@Url.Action("Add","ArticleInfo")', { ArticleTitle: articleTitle, ArticleContent: articleContent, ArticleTypeId: articleTypeId, FacePhoto: $("#articleFacePhotoImg").attr("src") }, function (data) {
             if (data.status == "ok") {
                 layer.msg(data.msg);
                 setTimeout(function () {
@@ -128,4 +142,38 @@
             }
         });
     };
+
+    //上传文章封面
+    uploadFacePhoto = function() {
+        //判断内容是否为空
+        if ($("#imgFile").val().length <= 0) {
+            return;
+        };
+        //执行异步上传
+        $.ajaxFileUpload({
+            url: '@Url.Action("Upload", "ArticleInfo")', //用于文件上传的服务器端请求地址
+            type: 'post',
+            data: { dir:'image'},//自定义参数
+            secureuri: false, //是否需要安全协议，一般设置为false
+            fileElementId: 'imgFile', //文件上传域的ID
+            dataType: 'json', //返回值类型 一般设置为json
+            success: function (data) //服务器成功响应处理函数
+            {
+                //由于ajaxFileUpload把原来的file元素替换成新的file元素，所以之前绑定的change事件就失效了，需要重新绑定一下
+                $("#imgFile").change(function () {
+                    uploadFacePhoto();
+                });
+                if (data.error==0) {
+                    $("#articleFacePhotoImg").attr("src", data.url);
+                } else {
+                    layer.msg(data.message);
+                }
+              
+            }
+        });
+    };
+    //绑定文章封面文件域改变事件
+    $("#imgFile").change(function () {
+        uploadFacePhoto();
+    });
 </script>

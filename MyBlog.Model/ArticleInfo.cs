@@ -28,6 +28,7 @@ namespace MyBlog.Model
         public System.DateTime PubTime { get; set; }
         public int ReadCount { get; set; }
         public int ArticleTypeId { get; set; }
+        public string FacePhoto { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
     	[JsonIgnore]

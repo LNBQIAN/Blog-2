@@ -16,6 +16,7 @@
           <Property Name="PubTime" Type="datetime" Nullable="false" />
           <Property Name="ReadCount" Type="int" Nullable="false" />
           <Property Name="ArticleTypeId" Type="int" Nullable="false" />
+          <Property Name="FacePhoto" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="ArticleType">
           <Key>
@@ -158,6 +159,7 @@
           <Property Name="PubTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ReadCount" Type="Int32" Nullable="false" />
           <Property Name="ArticleTypeId" Type="Int32" Nullable="false" />
+          <Property Name="FacePhoto" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="CommentInfo" Relationship="MyBlogModel.FK_ArticleInfoCommentInfo" FromRole="ArticleInfo" ToRole="CommentInfo" />
           <NavigationProperty Name="ArticleType" Relationship="MyBlogModel.FK_ArticleType_ArticleInfo" FromRole="ArticleInfo" ToRole="ArticleType" />
           <NavigationProperty Name="UserInfo" Relationship="MyBlogModel.FK_UserInfoArticleInfo" FromRole="ArticleInfo" ToRole="UserInfo" />
@@ -258,6 +260,7 @@
           <EntitySetMapping Name="ArticleInfo">
             <EntityTypeMapping TypeName="MyBlogModel.ArticleInfo">
               <MappingFragment StoreEntitySet="ArticleInfo">
+                <ScalarProperty Name="FacePhoto" ColumnName="FacePhoto" />
                 <ScalarProperty Name="ArticleTypeId" ColumnName="ArticleTypeId" />
                 <ScalarProperty Name="ReadCount" ColumnName="ReadCount" />
                 <ScalarProperty Name="PubTime" ColumnName="PubTime" />
