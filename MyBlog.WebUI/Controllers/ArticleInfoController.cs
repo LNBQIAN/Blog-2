@@ -51,14 +51,14 @@ namespace MyBlog.WebUI.Controllers
             {
                 pageIndex = pageCount;
             }
-            var articleList = ArticleInfoService.GetModelsByPage(pageSize, pageIndex, false, p => p.Id, p => true).Select(p => new
+            var articleList = ArticleInfoService.GetModelsByPage(pageSize, pageIndex, false, p => p.Id, p => true).ToList().Select(p => new
             {
                 Id = p.Id,
                 ArticleTypeName = p.ArticleType.Title,
                 Title = p.ArticleTitle,
                 UserInfo = p.UserInfo,
                 ReadCount = p.ReadCount,
-                PubTime = p.PubTime
+                PubTime = p.PubTime.ToString()
             });
             string pageBar = PageBar.GetNumberPageBarWithFirstIndexAndLastIndex(pageCount, pageIndex);
 

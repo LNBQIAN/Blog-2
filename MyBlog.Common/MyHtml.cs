@@ -11,9 +11,10 @@ namespace MyBlog.Common
         /// <summary>
         /// 过滤html
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">源文本</param>
+        /// <param name="length">返回文本长度</param>
         /// <returns></returns>
-        public static string StripHTML(string source)
+        public static string StripHTML(string source,int length)
         {
             try
             {
@@ -66,6 +67,7 @@ namespace MyBlog.Common
                     breaks = breaks + "\r";
                     tabs = tabs + "\t";
                 }
+                result = result.Substring(0, length)+"[...]";
                 return result;
             }
             catch
