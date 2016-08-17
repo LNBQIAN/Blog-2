@@ -1,0 +1,33 @@
+﻿@using MyBlog.Common
+@using MyBlog.Model
+@model List<MyBlog.Model.ArticleInfo>
+@{
+    Layout = "~/Views/Shared/_BlogLayout.cshtml";
+}
+
+<div class="am-u-md-8">
+    @foreach (ArticleInfo articleInfo in Model)
+    {
+        <article class="blog-main">
+            <h3 class="am-article-title blog-title">
+                <a href="#">@articleInfo.ArticleTitle</a>
+            </h3>
+            <h4 class="am-article-meta blog-meta">by <a href="">@articleInfo.UserInfo.UNickName</a> posted on @articleInfo.PubTime.ToString() under <a href="#">@articleInfo.ArticleType.Title</a></h4>
+
+            <div class="am-g blog-content">
+                <div class="am-u-lg-7">
+                    @MyHtml.StripHTML(articleInfo.ArticleContent)
+                </div>
+                <div class="am-u-lg-5">
+                    <p><img class="am-img-responsive" src="@articleInfo.FacePhoto">
+                    </p>
+                </div>
+            </div>
+        </article>
+        <hr class="am-article-divider blog-hr">
+    }
+</div>
+@{
+    Html.RenderAction("GetRightView", "Home");
+}
+

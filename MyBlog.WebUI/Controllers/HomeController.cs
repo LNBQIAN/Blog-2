@@ -27,12 +27,11 @@ namespace MyBlog.WebUI.Controllers
             return View();
         }
 
-
         #region 获取文章数据
         public ActionResult GetArticleList(int pageIndex)
         {
             //每页显示条数
-            int pageSize = 5;
+            int pageSize = 2;
             //总记录数
             int totalCount = ArticleInfoService.GetRecord("ArticleInfo");
             if (totalCount <= 0)
@@ -58,14 +57,13 @@ namespace MyBlog.WebUI.Controllers
                 UserInfo = p.UserInfo,
                 ReadCount = p.ReadCount,
                 PubTime = p.PubTime.ToString(),
-                ArticleContent=Common.MyHtml.StripHTML(p.ArticleContent,100),
-                FacePhoto=p.FacePhoto
+                ArticleContent = Common.MyHtml.StripHTML(p.ArticleContent),
+                FacePhoto = p.FacePhoto
             });
             string pageBar = PageBar.GetNumberPageBarWithFirstIndexAndLastIndex(pageCount, pageIndex);
 
             return Content(JsonConvert.SerializeObject(new { articleList = articleList, pageBar = pageBar }));
         }
-
         #endregion
 
         #region 获取博客右边显示的内容(因为需要多次使用,所以是部分视图)
@@ -74,7 +72,25 @@ namespace MyBlog.WebUI.Controllers
             return PartialView();
         }
         #endregion
-        
+
+        #region 搜索文章
+        public ActionResult SearchArticle(string searchStr)
+        {
+            //搜索条件是空，则显示首页
+            if (string.IsNullOrEmpty(searchStr))
+            {
+                return View("Index");
+            }
+            //搜索条件不是空,则显示所有符合条件的文章数据
+            else
+            {
+                List<ArticleInfo> articleInfoList = ArticleInfoService.GetModels(p => p.ArticleTitle.Contains(searchStr)).OrderByDescending(p=>p.PubTime).ToList();
+                return View(articleInfoList);
+            }
+        }
+        #endregion
     }
 }
+
+
 

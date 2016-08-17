@@ -9,12 +9,11 @@ namespace MyBlog.Common
     public static class MyHtml
     {
         /// <summary>
-        /// 过滤html
+        /// 过滤html,默认返回前100个字符
         /// </summary>
         /// <param name="source">源文本</param>
-        /// <param name="length">返回文本长度</param>
         /// <returns></returns>
-        public static string StripHTML(string source,int length)
+        public static string StripHTML(string source)
         {
             try
             {
@@ -67,7 +66,7 @@ namespace MyBlog.Common
                     breaks = breaks + "\r";
                     tabs = tabs + "\t";
                 }
-                result = result.Substring(0, length)+"[...]";
+                result = result.Substring(0, 100)+"[...]";
                 return result;
             }
             catch

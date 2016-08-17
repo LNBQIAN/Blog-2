@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>@ViewBag.Title</title>
+    <title>卷猫's blog-我在这里等风也等你</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
@@ -43,18 +43,27 @@
                 </li>
             </ul>
 
-            <form class="am-topbar-form am-topbar-left am-form-inline am-topbar-right" role="search">
+            <form id="ArticleSearchForm" class="am-topbar-form am-topbar-left am-form-inline am-topbar-right" role="search" method="POST" action="@Url.Action("SearchArticle","Home")">
                 <div class="am-form-group">
-                    <input type="text" class="am-form-field am-input-sm" placeholder="搜索文章">
+                    <input id="searchStr" name="searchStr" type="text" class="am-form-field am-input-sm" placeholder="搜索文章">
                 </div>
-                <button type="submit" class="am-btn am-btn-default am-btn-sm">搜索</button>
+                <button id="btnSearch" type="button" class="am-btn am-btn-default am-btn-sm">搜索</button>
+                <script>
+                    $(function() {
+                        $("#btnSearch").click(function() {
+                            if ($("#searchStr").val().length<=0) {
+                                location.href = "@Url.Action("Index","Home")";
+                            }
+                            $("#ArticleSearchForm").submit();
+                        });
+                    });
+                </script>
             </form>
-
         </div>
     </header>
     <!--head end-->
 
-    <div class="am-g am-g-fixed blog-g-fixed">
+    <div id="ContentBodyDiv" class="am-g am-g-fixed blog-g-fixed">
         @RenderBody()
     </div>
 

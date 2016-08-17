@@ -33,3 +33,38 @@ ChangeDateFormat = function (cellval) {
     var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
     return date.getFullYear() + "-" + month + "-" + currentDate;
 }
+//获取文章数据(前台页面使用)
+GetArticleInfo = function (pageIndex) {
+    $.post('/Home/GetArticleList', { pageIndex: pageIndex}, function (data) {
+        //清空内容
+        $("#articleInfoDiv").empty();
+        $("#pageBarUl").empty();
+        data = $.parseJSON(data);
+        //开始遍历数据
+        $.each(data.articleList, function (index, item) {
+            $("#articleInfoDiv").append(
+                '<article class="blog-main">' +
+                //文章标题
+                '<h3 class="am-article-title"><a href="#">' + item.Title + '</a></h3>' +
+                //作者,发布日期,文章分类
+                '<h4 class="am-article-meta blog-meta">by<a href="">' + item.UserInfo.UNickName + '</a> posted on ' + item.PubTime + ' under <a href="#">' + item.ArticleTypeName + '</a></h4>' +
+                '<div class="am-g blog-content">' +
+                //文章内容
+                '<div class="am-u-lg-7">' + item.ArticleContent + '</div>' +
+                //文章封面
+                '<div class="am-u-lg-5">' + '<p><img class="am-img-responsive" src="' + item.FacePhoto + '"></p></div>' +
+                '</div>' +
+                '</article>' +
+                '<hr class="am-article-divider blog-hr">');
+        });
+        //填充pagebar
+        $("#pageBarUl").append(data.pageBar);
+        //为pageBarUl下的a标签注册点击事件
+        $("#pageBarUl a").click(function () {
+            //当前a标签 存在pageIndex属性的话
+            if (typeof ($(this).attr('pageIndex')) != "undefined") {
+                GetArticleInfo($(this).attr('pageIndex'));
+            }
+        });
+    });
+};
