@@ -15,12 +15,6 @@ namespace MyBlog.Model
     
     public partial class ArticleInfo
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ArticleInfo()
-        {
-            this.CommentInfo = new HashSet<CommentInfo>();
-        }
-    
         public int Id { get; set; }
         public int UserId { get; set; }
         public string ArticleTitle { get; set; }
@@ -30,9 +24,6 @@ namespace MyBlog.Model
         public int ArticleTypeId { get; set; }
         public string FacePhoto { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    	[JsonIgnore]
-        public virtual ICollection<CommentInfo> CommentInfo { get; set; }
     	[JsonIgnore]
         public virtual ArticleType ArticleType { get; set; }
     	[JsonIgnore]

@@ -27,7 +27,6 @@ namespace MyBlog.Model
     
         public virtual DbSet<ArticleInfo> ArticleInfo { get; set; }
         public virtual DbSet<ArticleType> ArticleType { get; set; }
-        public virtual DbSet<CommentInfo> CommentInfo { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
     }
 }

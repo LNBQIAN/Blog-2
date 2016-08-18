@@ -19,7 +19,6 @@ namespace MyBlog.Model
         public UserInfo()
         {
             this.ArticleInfo = new HashSet<ArticleInfo>();
-            this.CommentInfo = new HashSet<CommentInfo>();
         }
     
         public int Id { get; set; }
@@ -36,8 +35,5 @@ namespace MyBlog.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
     	[JsonIgnore]
         public virtual ICollection<ArticleInfo> ArticleInfo { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    	[JsonIgnore]
-        public virtual ICollection<CommentInfo> CommentInfo { get; set; }
     }
 }
