@@ -1,13 +1,27 @@
-﻿<div class="am-u-md-4 blog-sidebar">
+﻿@using MyBlog.Model
+<div class="am-u-md-4 blog-sidebar">
     <div class="am-panel-group">
         <section class="am-panel am-panel-default">
             <div class="am-panel-hd">关于我</div>
             <div class="am-panel-bd">
-                <p>
-                    前所未有的中文云端字型服务，让您在 web 平台上自由使用高品质中文字体，跨平台、可搜寻，而且超美。云端字型是我们的事业，推广字型学知识是我们的志业。从字体出发，关心设计与我们的生活，justfont blog
-                    正是為此而生。
-                </p>
-                <a class="am-btn am-btn-success am-btn-sm" href="#">查看更多 →</a>
+                @{
+                    //我的账号
+                    UserInfo userInfo = (ViewBag.UserInfo as UserInfo);
+                }
+                <div class="am-g" style="text-align: center;font-size: 15px">
+                    <div class="am-container">
+                        <img src="@userInfo.UHeadPhoto" alt="..." class="am-img-thumbnail am-circle">
+                    </div>
+                    <div class="am-u-sm-12">
+                        <br/>
+                        <p>出生在97年</p>
+                        <p>喜欢:编程,动漫</p>
+                        <p>联系方式:</p>
+                        <p>QQ:1147865669</p>
+                        <p>贴吧账号:萝渊</p>
+                        <a class="am-btn am-btn-success am-btn-sm" href="@Url.Action("AboutMe","Home")">查看更多 →</a>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -46,7 +60,7 @@
                 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
                 <script type="text/javascript">
                     var duoshuoQuery = { short_name: "anneke" };
-                    (function() {
+                    (function () {
                         var ds = document.createElement('script');
                         ds.type = 'text/javascript';
                         ds.async = true;

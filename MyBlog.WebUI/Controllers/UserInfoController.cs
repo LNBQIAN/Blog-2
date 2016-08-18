@@ -154,7 +154,7 @@ namespace MyBlog.WebUI.Controllers
                 string domainName = ConfigurationManager.AppSettings["domainName"];
                 //验证邮箱的验证码
                 string validateCode = userInfo.validateCode;
-                System.Net.Mail.MailAddress from = new System.Net.Mail.MailAddress("656872652@qq.com", "凛凛蝶大人"); //填写电子邮件地址，和显示名称
+                System.Net.Mail.MailAddress from = new System.Net.Mail.MailAddress("656872652@qq.com", "卷猫"); //填写电子邮件地址，和显示名称
                 System.Net.Mail.MailAddress to = new System.Net.Mail.MailAddress(email, userInfo.UNickName); //填写邮件的收件人地址和名称
                 System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
                 mail.From = from;

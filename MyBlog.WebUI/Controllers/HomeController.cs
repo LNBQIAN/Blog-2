@@ -15,7 +15,7 @@ namespace MyBlog.WebUI.Controllers
     public class HomeController : Controller
     {
         private IArticleInfoService ArticleInfoService = BLLContainer.Container.Resolve<IArticleInfoService>();
-
+        private IUserInfoService UserInfoService = BLLContainer.Container.Resolve<IUserInfoService>();
         // GET: Home
         public ActionResult Index()
         {
@@ -69,6 +69,7 @@ namespace MyBlog.WebUI.Controllers
         #region 获取博客右边显示的内容(因为需要多次使用,所以是部分视图)
         public ActionResult GetRightView()
         {
+            ViewBag.UserInfo = UserInfoService.GetModels(p => p.UName == "admin").FirstOrDefault();
             return PartialView();
         }
         #endregion
@@ -84,14 +85,18 @@ namespace MyBlog.WebUI.Controllers
             //搜索条件不是空,则显示所有符合条件的文章数据
             else
             {
-                List<ArticleInfo> articleInfoList = ArticleInfoService.GetModels(p => p.ArticleTitle.Contains(searchStr)).OrderByDescending(p=>p.PubTime).ToList();
+                List<ArticleInfo> articleInfoList = ArticleInfoService.GetModels(p => p.ArticleTitle.Contains(searchStr)).OrderByDescending(p => p.PubTime).ToList();
                 return View(articleInfoList);
             }
         }
         #endregion
 
-
-
+        #region 关于我
+        public ActionResult AboutMe()
+        {
+            return View();
+        }
+        #endregion
     }
 }
 

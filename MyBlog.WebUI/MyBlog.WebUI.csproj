@@ -172,6 +172,7 @@
     <Content Include="Content\assets\js\handlebars.min.js" />
     <Content Include="Content\assets\js\jquery.min.js" />
     <Content Include="Content\Blog\Base.css" />
+    <Content Include="Content\Image\aboutme .jpg" />
     <Content Include="Content\Image\LoginPic.png" />
     <Content Include="Content\Image\RegPic.png" />
     <Content Include="Content\layer\extend\layer.ext.js" />
@@ -428,6 +429,7 @@
     <Content Include="Views\Home\GetRightView.cshtml" />
     <Content Include="Views\Home\SearchArticle.cshtml" />
     <Content Include="Views\ArticleInfo\Detial.cshtml" />
+    <Content Include="Views\Home\AboutMe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
