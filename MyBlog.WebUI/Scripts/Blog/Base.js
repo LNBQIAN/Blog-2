@@ -45,7 +45,7 @@ GetArticleInfo = function (pageIndex) {
             $("#articleInfoDiv").append(
                 '<article class="blog-main">' +
                 //文章标题
-                '<h3 class="am-article-title"><a href="#">' + item.Title + '</a></h3>' +
+                '<h3 class="am-article-title"><a href="/ArticleInfo/Detial?id='+item.Id+'">' + item.Title + '</a></h3>' +
                 //作者,发布日期,文章分类
                 '<h4 class="am-article-meta blog-meta">by<a href="">' + item.UserInfo.UNickName + '</a> posted on ' + item.PubTime + ' under <a href="#">' + item.ArticleTypeName + '</a></h4>' +
                 '<div class="am-g blog-content">' +

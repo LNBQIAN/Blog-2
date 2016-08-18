@@ -103,7 +103,7 @@ namespace MyBlog.WebUI.Controllers
             }
             articleInfo.UserId = (Session["UserInfo"] as UserInfo).Id;
             articleInfo.PubTime = DateTime.Now;
-            articleInfo.FacePhoto = string.IsNullOrEmpty(articleInfo.FacePhoto) == true ? "/UserFile/defaultPhoto.jpg": articleInfo.FacePhoto;
+            articleInfo.FacePhoto = string.IsNullOrEmpty(articleInfo.FacePhoto) == true ? "/UserFile/defaultFace.jpg" : articleInfo.FacePhoto;
 
             //默认阅读次数为0
             articleInfo.ReadCount = 0;
@@ -208,6 +208,19 @@ namespace MyBlog.WebUI.Controllers
                 return Content(JsonConvert.SerializeObject(new { error = 1, message = "上传文件失败" }));
                // return Json(new { error = 1, message = "上传文件失败" }, JsonRequestBehavior.AllowGet);
             }
+        }
+        #endregion
+
+        #region 显示文章详细信息
+        public ActionResult Detial(int id)
+        {
+            ArticleInfo articleInfo = ArticleInfoService.GetModels(p => p.Id == id).FirstOrDefault();
+            if (articleInfo==null)
+            {
+                return Redirect(Url.Action("Index","Home"));
+            }
+
+            return View(articleInfo);
         }
         #endregion
     }

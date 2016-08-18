@@ -10,7 +10,7 @@
     {
         <article class="blog-main">
             <h3 class="am-article-title blog-title">
-                <a href="#">@articleInfo.ArticleTitle</a>
+                <a href="@Url.Action("Detial","ArticleInfo")?id=@articleInfo.Id">@articleInfo.ArticleTitle</a>
             </h3>
             <h4 class="am-article-meta blog-meta">by <a href="">@articleInfo.UserInfo.UNickName</a> posted on @articleInfo.PubTime.ToString() under <a href="#">@articleInfo.ArticleType.Title</a></h4>
 
