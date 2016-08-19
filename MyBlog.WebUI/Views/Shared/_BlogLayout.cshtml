@@ -8,6 +8,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="description" itemprop="description" content="卷猫的个人博客,博主喜欢编程和动漫,希望能和大家成为好朋友 >.<" />
     <link rel="alternate icon" type="image/png" href="/Content/assets/i/favicon.png">
     <link rel="stylesheet" href="/Content/assets/css/amazeui.min.css" />
     <link rel="stylesheet" href="~/Content/assets/css/Blog.css" />
@@ -27,24 +28,24 @@
         </button>
 
         <div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse">
-         
+
             <ul id="navigateMenu" class="am-nav am-nav-pills am-topbar-nav">
                 <li class="am-active"><a href="@Url.Action("index","Home")">首页</a></li>
                 <li><a href="#">留言板</a></li>
                 @*<li class="am-dropdown" data-am-dropdown>
-                    <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
-                        捐赠列表 <span class="am-icon-caret-down"></span>
-                    </a>
-                    <ul class="am-dropdown-content">
-                        <li class="am-dropdown-header">标题</li>
-                        <li><a href="#">关于我们</a></li>
-                        <li><a href="#">关于字体</a></li>
-                        <li><a href="#">TIPS</a></li>
-                    </ul>
-                </li>*@
+                        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                            捐赠列表 <span class="am-icon-caret-down"></span>
+                        </a>
+                        <ul class="am-dropdown-content">
+                            <li class="am-dropdown-header">标题</li>
+                            <li><a href="#">关于我们</a></li>
+                            <li><a href="#">关于字体</a></li>
+                            <li><a href="#">TIPS</a></li>
+                        </ul>
+                    </li>*@
             </ul>
             <script>
-                $(function() {
+                $(function () {
                     //设置导航栏菜单切换效果
                     $("#navigateMenu li").click(function () {
                         $("#navigateMenu li[class='am-active']").removeAttr("class");
@@ -52,11 +53,11 @@
                     });
                 });
             </script>
-            
+
             <form id="ArticleSearchForm" class="am-topbar-form am-topbar-left am-form-inline am-topbar-right" role="search" method="POST" action="@Url.Action("SearchArticle","Home")">
                 <div class="am-form-group">
                     <input id="searchStr" name="searchStr" type="text" class="am-form-field am-input-sm" placeholder="搜索文章">
-                    <input type="hidden" name="type" value="articletitle"/>
+                    <input type="hidden" name="type" value="articletitle" />
                     <input type="hidden" name="pageIndex" value="1" />
                 </div>
                 <button id="btnSearch" type="button" class="am-btn am-btn-default am-btn-sm">搜索</button>
@@ -86,16 +87,51 @@
                     color: gray;
                 }
             </style>
-            <a href="@Url.Action("Index", "Home")">卷猫‘s Blog</a><br/>
+            <a href="@Url.Action("Index", "Home")">卷猫‘s Blog</a><br />
             <small><a href="@Url.Action("Index", "Home")">© 2016 卷猫‘s Blog · Designed by 卷猫</a> · <a href="http://www.miitbeian.gov.cn">沪ICP备16032290号</a></small>
         </p>
     </footer>
+    <!--小埋-->
+    <div id="xiaomaiDiv" class="xiaomai">
+        <img style="width: 50px" src="~/Content/Image/xiaomai.png" />
+        <script>
+            $(function () {
+                $("#xiaomaiDiv").mouseover(function () {
+                    $(this).animate({ bottom: "1.8px" }, 700);
+                });
+                $("#xiaomaiDiv").mouseout(function () {
+                    $(this).animate({ bottom: "0px" }, 100);
+                });
+            });
+        </script>
+    </div>
+    <!--小埋end-->
+    <!--回到顶部-->
+    <div id="back-to-top" class="am-hide-sm-only" data-am-smooth-scroll="{speed: 5000}">
+        <script>
+            $(function() {
+                $(window).scroll(function () {
+                    //滚动条到达页面一半的时候
+                    if ($(document).scrollTop() >= ($(document).height() - $(window).height()) / 2) {
+                        //改变height属性 触发css的transition的效果
+                        $("#back-to-top").css("height", "900px");//图片高度就是900px 小了显示不全
+                    }
+                    //滚动条不到页面一半的时候
+                    if ($(document).scrollTop() <= ($(document).height() - $(window).height()) / 2) {
+                        //改变height属性 触发css的transition的效果
+                        $("#back-to-top").css("height", "-900px");
+                    }
+                });
+            });
+        </script>
+    </div>
+    <!--回到顶部end-->
 
     <!--[if lt IE 9]>
-        <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
-        <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
-        <script src="/Content/assets/js/amazeui.ie8polyfill.min.js"></script>
-    <![endif]-->
+                <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+                <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+                <script src="/Content/assets/js/amazeui.ie8polyfill.min.js"></script>
+            <![endif]-->
     <!--[if (gte IE 9)|!(IE)]><!-->
     <!--<![endif]-->
     <script src="/Content/assets/js/amazeui.min.js"></script>

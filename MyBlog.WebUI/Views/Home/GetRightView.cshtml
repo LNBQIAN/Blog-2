@@ -1,5 +1,6 @@
 ﻿@using MyBlog.Model
 <div class="am-u-md-4 blog-sidebar">
+
     <div class="am-panel-group">
         <section class="am-panel am-panel-default">
             <div class="am-panel-hd" data-am-collapse="{target: '#aboutMePanel'}">关于我<span style="float: right">▼</span></div>
@@ -8,7 +9,7 @@
                     //我的账号
                     UserInfo userInfo = (ViewBag.UserInfo as UserInfo);
                 }
-                <div class="am-g" style="text-align: center;font-size: 15px">
+                <div class="am-g" style="text-align: center; font-size: 15px">
                     <div class="am-container">
                         <img src="@userInfo.UHeadPhoto" alt="..." class="am-close-spin am-img-thumbnail am-circle">
                     </div>
@@ -19,7 +20,7 @@
                         <p>联系方式:</p>
                         <p>QQ:1147865669</p>
                         <p>贴吧账号:萝渊</p>
-                        <a class="am-btn am-btn-success am-btn-sm" href="@Url.Action("AboutMe","Home")">查看更多 →</a>
+                        <a class="am-btn am-btn-success am-btn-sm" href="@Url.Action("AboutMe", "Home")">查看更多 →</a>
                     </div>
                 </div>
             </div>
@@ -43,7 +44,7 @@
                                 if (treeNode.isParent) {
                                     return;
                                 }
-                                location.href = "@Url.Action("SearchArticle","Home")?type=articletype&searchStr=" + treeNode.id + "&pageIndex=1";
+                                location.href = "@Url.Action("SearchArticle", "Home")?type=articletype&searchStr=" + treeNode.id + "&pageIndex=1";
                             }
                         }
                     };
@@ -68,9 +69,10 @@
             <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
             <script type="text/javascript">
                 var duoshuoQuery = { short_name: "anneke" };
-                (function () {
+                (function() {
                     var ds = document.createElement('script');
-                    ds.type = 'text/javascript'; ds.async = true;
+                    ds.type = 'text/javascript';
+                    ds.async = true;
                     ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
                     ds.charset = 'UTF-8';
                     (document.getElementsByTagName('head')[0]
@@ -89,7 +91,7 @@
                 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
                 <script type="text/javascript">
                     var duoshuoQuery = { short_name: "anneke" };
-                    (function () {
+                    (function() {
                         var ds = document.createElement('script');
                         ds.type = 'text/javascript';
                         ds.async = true;
@@ -111,15 +113,23 @@
                 <!--多说js加载开始，一个页面只需要加载一次 -->
                 <script type="text/javascript">
                     var duoshuoQuery = { short_name: "anneke" };
-                    (function () {
+                    (function() {
                         var ds = document.createElement('script');
-                        ds.type = 'text/javascript'; ds.async = true;
+                        ds.type = 'text/javascript';
+                        ds.async = true;
                         ds.src = 'http://static.duoshuo.com/embed.js';
                         ds.charset = 'UTF-8';
                         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
                     })();
                 </script>
                 <!--多说js加载结束，一个页面只需要加载一次 -->
+            </div>
+        </section>
+
+        <section class="am-panel am-panel-default">
+            <div class="am-panel-hd" data-am-collapse="{target: '#musicPanel'}">音乐<span style="float: right">▼</span></div>
+            <div class="am-panel-bd" id="musicPanel">
+                <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=110 src="http://music.163.com/outchain/player?type=0&id=430064970&auto=1&height=90"></iframe>
             </div>
         </section>
     </div>

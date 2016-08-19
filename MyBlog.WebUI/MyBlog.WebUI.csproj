@@ -175,7 +175,9 @@
     <Content Include="Content\Image\aboutme .jpg" />
     <Content Include="Content\Image\LoginPic.png" />
     <Content Include="Content\Image\RegPic.png" />
+    <Content Include="Content\Image\scroll.png" />
     <Content Include="Content\Image\sorry.gif" />
+    <Content Include="Content\Image\xiaomai.png" />
     <Content Include="Content\layer\extend\layer.ext.js" />
     <Content Include="Content\layer\layer.js" />
     <Content Include="Content\layer\skin\default\icon-ext.png" />
