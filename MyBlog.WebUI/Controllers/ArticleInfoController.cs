@@ -219,7 +219,9 @@ namespace MyBlog.WebUI.Controllers
             {
                 return Redirect(Url.Action("Index","Home"));
             }
-
+            //每次访问阅读量+1
+            articleInfo.ReadCount = articleInfo.ReadCount + 1;
+            ArticleInfoService.Update(articleInfo);
             return View(articleInfo);
         }
         #endregion

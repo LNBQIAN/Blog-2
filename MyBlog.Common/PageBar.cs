@@ -126,9 +126,7 @@ namespace MyBlog.Common
         {
             //« 1 2 3 4 5 »   
             StringBuilder sb = new StringBuilder();
-
-          
-
+            
             //后退一页
             //当前页<=1 不加超链接 不能点击
             if (pageIndex <= 1)
@@ -208,5 +206,7 @@ namespace MyBlog.Common
         
             return sb.ToString();
         }
+
+
     }
 }

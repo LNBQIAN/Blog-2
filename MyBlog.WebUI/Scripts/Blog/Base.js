@@ -47,7 +47,8 @@ GetArticleInfo = function (pageIndex) {
                 //文章标题
                 '<h3 class="am-article-title"><a href="/ArticleInfo/Detial?id='+item.Id+'">' + item.Title + '</a></h3>' +
                 //作者,发布日期,文章分类
-                '<h4 class="am-article-meta blog-meta">by<a href="">' + item.UserInfo.UNickName + '</a> posted on ' + item.PubTime + ' under <a href="#">' + item.ArticleTypeName + '</a></h4>' +
+                '<h4 class="am-article-meta blog-meta">by<a href="javascript:void(0);">' + item.UserInfo.UNickName + '</a> posted on ' + item.PubTime + ' under <a href="javascript:void(0);">' + item.ArticleTypeName + '</a></h4>' +
+                '<h4 class="am-article-meta blog-meta">阅读量:<a href="javascript:void(0);">'+item.ReadCount+'</a></h4>'+
                 '<div class="am-g blog-content">' +
                 //文章内容
                 '<div class="am-u-lg-7">' + item.ArticleContent + '</div>' +

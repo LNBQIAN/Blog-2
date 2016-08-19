@@ -2,18 +2,18 @@
 <div class="am-u-md-4 blog-sidebar">
     <div class="am-panel-group">
         <section class="am-panel am-panel-default">
-            <div class="am-panel-hd">关于我</div>
-            <div class="am-panel-bd">
+            <div class="am-panel-hd" data-am-collapse="{target: '#aboutMePanel'}">关于我<span style="float: right">▼</span></div>
+            <div class="am-panel-bd" id="aboutMePanel">
                 @{
                     //我的账号
                     UserInfo userInfo = (ViewBag.UserInfo as UserInfo);
                 }
                 <div class="am-g" style="text-align: center;font-size: 15px">
                     <div class="am-container">
-                        <img src="@userInfo.UHeadPhoto" alt="..." class="am-img-thumbnail am-circle">
+                        <img src="@userInfo.UHeadPhoto" alt="..." class="am-close-spin am-img-thumbnail am-circle">
                     </div>
                     <div class="am-u-sm-12">
-                        <br/>
+                        <br />
                         <p>出生在97年</p>
                         <p>喜欢:编程,动漫</p>
                         <p>联系方式:</p>
@@ -26,15 +26,44 @@
         </section>
 
         <section class="am-panel am-panel-default">
-            <div class="am-panel-hd">热评文章</div>
+            <div class="am-panel-hd" data-am-collapse="{target: '#articleTypePanel'}">文章分类<span style="float: right">▼</span></div>
+            <div class="am-panel-bd" id="articleTypePanel">
+                <link href="~/Content/metroStyle/metroStyle.css" rel="stylesheet" />
+                <script src="~/Scripts/jquery.ztree.all-3.5.min.js"></script>
+                <ul id="articleTypeTree" class="ztree"></ul>
+                <script>
+                    var setting = {
+                        data: {
+                            simpleData: {
+                                enable: true
+                            }
+                        },
+                        callback: {
+                            beforeClick: function(treeId, treeNode) {
+                                if (treeNode.isParent) {
+                                    return;
+                                }
+                                location.href = "@Url.Action("SearchArticle","Home")?type=articletype&searchStr=" + treeNode.id + "&pageIndex=1";
+                            }
+                        }
+                    };
+                    var zNodes = @Html.Raw(ViewBag.zNodes);
+                    $.fn.zTree.init($("#articleTypeTree"), setting, zNodes);
+                </script>
+            </div>
+        </section>
+
+        <section class="am-panel am-panel-default">
+            <div class="am-panel-hd" data-am-collapse="{target: '#hotArticlePanel'}">热评文章<span style="float: right">▼</span></div>
             <!-- 多说热评文章 start -->
             <style>
                 .ds-top-threads li {
                     list-style-type: none;
-                    margin-left: 10px;
                 }
             </style>
-            <div class="ds-top-threads" data-range="weekly" data-num-items="5"></div>
+            <div class="am-panel-bd" id="hotArticlePanel">
+                <div class="ds-top-threads" data-range="weekly" data-num-items="5"></div>
+            </div>
             <!-- 多说热评文章 end -->
             <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
             <script type="text/javascript">
@@ -45,15 +74,15 @@
                     ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
                     ds.charset = 'UTF-8';
                     (document.getElementsByTagName('head')[0]
-                     || document.getElementsByTagName('body')[0]).appendChild(ds);
+                        || document.getElementsByTagName('body')[0]).appendChild(ds);
                 })();
             </script>
             <!-- 多说公共JS代码 end -->
         </section>
 
         <section class="am-panel am-panel-default">
-            <div class="am-panel-hd">最新评论</div>
-            <div class="am-panel-bd">
+            <div class="am-panel-hd" data-am-collapse="{target: '#newCommentPanel'}">最新评论<span style="float: right">▼</span></div>
+            <div class="am-panel-bd" id="newCommentPanel">
                 <!-- 多说最新评论 start -->
                 <div class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-title="1" data-show-admin="1" data-excerpt-length="70"></div>
                 <!-- 多说最新评论 end -->
@@ -76,8 +105,8 @@
 
 
         <section class="am-panel am-panel-default">
-            <div class="am-panel-hd">这些人排着队来看过我的博客</div>
-            <div class="am-panel-bd">
+            <div class="am-panel-hd" data-am-collapse="{target: '#visitorsPanel'}">这些人排着队来看过我的博客<span style="float: right">▼</span></div>
+            <div class="am-panel-bd" id="visitorsPanel">
                 <ul class="ds-recent-visitors" data-num-items="10"></ul>
                 <!--多说js加载开始，一个页面只需要加载一次 -->
                 <script type="text/javascript">
@@ -95,3 +124,8 @@
         </section>
     </div>
 </div>
+<script>
+    $(function () {
+        $("div[class='am-panel-bd']").collapse('open');
+    });
+</script>

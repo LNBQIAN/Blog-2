@@ -27,12 +27,13 @@
         </button>
 
         <div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse">
-            <ul class="am-nav am-nav-pills am-topbar-nav">
+         
+            <ul id="navigateMenu" class="am-nav am-nav-pills am-topbar-nav">
                 <li class="am-active"><a href="@Url.Action("index","Home")">首页</a></li>
-                <li><a href="#">项目</a></li>
-                <li class="am-dropdown" data-am-dropdown>
+                <li><a href="#">留言板</a></li>
+                @*<li class="am-dropdown" data-am-dropdown>
                     <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
-                        菜单 <span class="am-icon-caret-down"></span>
+                        捐赠列表 <span class="am-icon-caret-down"></span>
                     </a>
                     <ul class="am-dropdown-content">
                         <li class="am-dropdown-header">标题</li>
@@ -40,12 +41,23 @@
                         <li><a href="#">关于字体</a></li>
                         <li><a href="#">TIPS</a></li>
                     </ul>
-                </li>
+                </li>*@
             </ul>
-
+            <script>
+                $(function() {
+                    //设置导航栏菜单切换效果
+                    $("#navigateMenu li").click(function () {
+                        $("#navigateMenu li[class='am-active']").removeAttr("class");
+                        $(this).attr("class", "am-active");
+                    });
+                });
+            </script>
+            
             <form id="ArticleSearchForm" class="am-topbar-form am-topbar-left am-form-inline am-topbar-right" role="search" method="POST" action="@Url.Action("SearchArticle","Home")">
                 <div class="am-form-group">
                     <input id="searchStr" name="searchStr" type="text" class="am-form-field am-input-sm" placeholder="搜索文章">
+                    <input type="hidden" name="type" value="articletitle"/>
+                    <input type="hidden" name="pageIndex" value="1" />
                 </div>
                 <button id="btnSearch" type="button" class="am-btn am-btn-default am-btn-sm">搜索</button>
                 <script>
