@@ -174,6 +174,7 @@
     <Content Include="Content\Blog\Base.css" />
     <Content Include="Content\Image\aboutme .jpg" />
     <Content Include="Content\Image\LoginPic.png" />
+    <Content Include="Content\Image\messageBoard.jpg" />
     <Content Include="Content\Image\RegPic.png" />
     <Content Include="Content\Image\scroll.png" />
     <Content Include="Content\Image\sorry.gif" />
@@ -433,6 +434,7 @@
     <Content Include="Views\Home\SearchArticle.cshtml" />
     <Content Include="Views\ArticleInfo\Detial.cshtml" />
     <Content Include="Views\Home\AboutMe.cshtml" />
+    <Content Include="Views\Home\MessageBoard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

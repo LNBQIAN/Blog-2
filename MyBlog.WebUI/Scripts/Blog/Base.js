@@ -45,10 +45,14 @@ GetArticleInfo = function (pageIndex) {
             $("#articleInfoDiv").append(
                 '<article class="blog-main">' +
                 //文章标题
-                '<h3 class="am-article-title"><a href="/ArticleInfo/Detial?id='+item.Id+'">' + item.Title + '</a></h3>' +
-                //作者,发布日期,文章分类
-                '<h4 class="am-article-meta blog-meta">by<a href="javascript:void(0);">' + item.UserInfo.UNickName + '</a> posted on ' + item.PubTime + ' under <a href="javascript:void(0);">' + item.ArticleTypeName + '</a></h4>' +
-                '<h4 class="am-article-meta blog-meta">阅读量:<a href="javascript:void(0);">'+item.ReadCount+'</a></h4>'+
+                '<h3 class="am-article-title"><a href="/ArticleInfo/Detial?id=' + item.Id + '">' + item.Title + '</a></h3>' +
+                //,发布日期,文章分类,作者,阅读次数
+                '<h4 class="am-article-meta blog-meta">' +
+                '<span class="am-icon-heart-o"> posted on</span> ' + item.PubTime +
+                ' • under <a href="javascript:void(0);">' + item.ArticleTypeName + '</a>' +
+                ' • by&nbsp;<a href="javascript:void(0);">' + item.UserInfo.UNickName + '</a>' +
+                ' • <span class="am-icon-eye"> ' + item.ReadCount + '次围观</span>' +
+                '</h4>' +
                 '<div class="am-g blog-content">' +
                 //文章内容
                 '<div class="am-u-lg-7">' + item.ArticleContent + '</div>' +

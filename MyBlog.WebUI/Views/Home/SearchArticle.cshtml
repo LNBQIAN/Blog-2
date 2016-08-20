@@ -26,8 +26,12 @@
                     <h3 class="am-article-title blog-title">
                         <a href="@Url.Action("Detial", "ArticleInfo")?id=@articleInfo.Id">@articleInfo.ArticleTitle</a>
                     </h3>
-                    <h4 class="am-article-meta blog-meta">by <a href="">@articleInfo.UserInfo.UNickName</a> posted on @articleInfo.PubTime.ToString() under <a href="#">@articleInfo.ArticleType.Title</a></h4>
-                    <h4 class="am-article-meta blog-meta">阅读量:<a href="javascript:void(0);">@articleInfo.ReadCount</a></h4>
+                    <h4 class="am-article-meta blog-meta">
+                        <span class="am-icon-heart-o"> posted on</span>&nbsp;@articleInfo.PubTime
+                        • under <a href="javascript:void(0);">@articleInfo.ArticleType.Title</a>
+                        • by&nbsp;<a href="javascript:void(0);">@articleInfo.UserInfo.UNickName</a>
+                        • <span class="am-icon-eye">@articleInfo.ReadCount<span>次围观</span></span>
+                    </h4>
                     <div class="am-g blog-content">
                         <div class="am-u-lg-7">
                             @MyHtml.StripHTML(articleInfo.ArticleContent)

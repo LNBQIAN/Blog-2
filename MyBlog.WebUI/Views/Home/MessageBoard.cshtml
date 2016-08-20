@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "MessageBoard";
+    Layout = "~/Views/Shared/_BlogLayout.cshtml";
+}
+
+<div class="am-u-md-8">
+    <article class="am-article">
+        <div class="am-article-hd">
+            <h1 class="am-article-title">留言板</h1>
+            <p class="am-article-meta">
+                发布日期:2016-8-18
+            </p>
+        </div>
+        <div class="am-article-bd">
+            <img src="~/Content/Image/messageBoard.jpg"/>
+            <p style="font-size: 15px" class="am-kai">
+                Hello<br/>
+                有什么话要对我说吗？<br/>
+                这里是你畅所欲言的地方<br/>
+                可以咨询<br/>
+                可以交流<br/>
+                可以感叹<br/>
+                可以发飙<br/>
+                但不可以订外卖!
+            </p>
+        </div>
+    </article>
+    <hr/>
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="messageBoard" data-title="留言板" data-url="@Request.Url"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+        var duoshuoQuery = { short_name: "anneke" };
+        (function() {
+            var ds = document.createElement('script');
+            ds.type = 'text/javascript';
+            ds.async = true;
+            ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            ds.charset = 'UTF-8';
+            (document.getElementsByTagName('head')[0]
+                || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+@{
+    Html.RenderAction("GetRightView", "Home");
+}

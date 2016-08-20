@@ -246,6 +246,13 @@ namespace MyBlog.WebUI.Controllers
             return View();
         }
         #endregion
+
+        #region 留言板
+        public ActionResult MessageBoard()
+        {
+            return View();
+        }
+        #endregion
     }
 }
 

@@ -8,7 +8,10 @@
             <div class="am-article-hd">
                 <h1 class="am-article-title">@Model.ArticleTitle</h1>
                 <p class="am-article-meta">
-                    by <a href="@Url.Action("Detial", "ArticleInfo")?id=@Model.Id">@Model.UserInfo.UNickName</a> posted on @Model.PubTime.ToString() under <a href="#">@Model.ArticleType.Title</a>
+                    <span class="am-icon-heart-o"> posted on</span>&nbsp;@Model.PubTime
+                    • under <a href="javascript:void(0);">@Model.ArticleType.Title</a>
+                    • by&nbsp;<a href="javascript:void(0);">@Model.UserInfo.UNickName</a>
+                    • <span class="am-icon-eye">@Model.ReadCount<span>次围观</span></span>
                 </p>
             </div>
 
