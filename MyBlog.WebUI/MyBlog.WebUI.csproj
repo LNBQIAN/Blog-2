@@ -204,6 +204,7 @@
     <Content Include="Content\assets\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\assets\fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\assets\fonts\FontAwesome.otf" />
+    <None Include="Properties\PublishProfiles\MyBlog.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -409,6 +410,25 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="UserFile\defaultFace.jpg" />
+    <Content Include="UserFile\defaultPhoto.jpg" />
+    <Content Include="UserFile\用户编号1\image\20160818145606_4800.png" />
+    <Content Include="UserFile\用户编号1\image\20160818150405_4314.jpg" />
+    <Content Include="UserFile\用户编号1\image\20160818152905_3016.jpg" />
+    <Content Include="UserFile\用户编号1\image\20160818152932_3419.jpg" />
+    <Content Include="UserFile\用户编号1\image\20160818153000_0384.jpg" />
+    <Content Include="UserFile\用户编号1\image\20160818153034_2952.jpg" />
+    <Content Include="UserFile\用户编号1\image\20160818153309_6679.jpg" />
+    <Content Include="UserFile\用户编号1\image\20160818154432_7527.jpg" />
+    <Content Include="UserFile\用户编号1\image\20160818154441_2515.jpg" />
+    <Content Include="UserFile\用户编号1\image\20160818154448_5768.jpg" />
+    <Content Include="UserFile\用户编号1\image\20160819152825_1119.jpg" />
+    <Content Include="UserFile\用户编号1\image\20160819152845_9602.jpg" />
+    <Content Include="UserFile\用户编号1\UserPhoto\20160815144846.jpg" />
+    <Content Include="UserFile\用户编号1\UserPhoto\20160818214552.jpg" />
+    <Content Include="UserFile\用户编号1\UserPhoto\20160818214615.jpg" />
+    <Content Include="UserFile\用户编号1\UserPhoto\20160818214907.jpg" />
+    <Content Include="UserFile\用户编号1\UserPhoto\20160818215022.png" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -439,7 +459,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="UserFile\" />
+    <Folder Include="UserFile\用户编号1\flash\" />
+    <Folder Include="UserFile\用户编号1\media\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

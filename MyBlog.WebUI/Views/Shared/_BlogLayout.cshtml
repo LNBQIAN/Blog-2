@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Configuration
+<!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
@@ -30,8 +31,8 @@
         <div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse">
 
             <ul id="navigateMenu" class="am-nav am-nav-pills am-topbar-nav">
-                <li class="am-active"><a href="@Url.Action("index","Home")">首页</a></li>
-                <li><a href="@Url.Action("MessageBoard","Home")">留言板</a></li>
+                <li id="navigateIndex"><a href="@Url.Action("index","Home")">首页</a></li>
+                <li id="navigateMessageBoard"><a href="@Url.Action("MessageBoard","Home")">留言板</a></li>
                 @*<li class="am-dropdown" data-am-dropdown>
                         <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
                             捐赠列表 <span class="am-icon-caret-down"></span>
@@ -47,10 +48,14 @@
             <script>
                 $(function () {
                     //设置导航栏菜单切换效果
-                    $("#navigateMenu li").click(function () {
-                        $("#navigateMenu li[class='am-active']").removeAttr("class");
-                        $(this).attr("class", "am-active");
-                    });
+                    //当前地址是首页
+                    if ('@Request.Url' == "@ConfigurationManager.AppSettings["domainName"]/") {
+                        $("#navigateIndex").attr("class", "am-active");
+                    }
+                    //当前地址是留言板
+                    if ('@Request.Url'.indexOf("MessageBoard") != -1) {
+                        $("#navigateMessageBoard").attr("class", "am-active");
+                    }
                 });
             </script>
 
@@ -126,7 +131,6 @@
         </script>
     </div>
     <!--回到顶部end-->
-
     <!--[if lt IE 9]>
                 <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
                 <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
