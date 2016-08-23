@@ -33,7 +33,7 @@ namespace MyBlog.BLL
                     
                     UserInfoDal.Delete(u);
                 }
-                return DbContext.SaveChanges();
+                return Dal.SaveChanges();
             }
             else
             {
