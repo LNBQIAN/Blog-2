@@ -28,7 +28,7 @@ namespace MyBlog.BLL
             }
             //articleType.ArticleInfo.Clear();
             ArticleTypeDal.Delete(articleType);
-            return DbContext.SaveChanges();
+            return Dal.SaveChanges();
         }
 
     }
