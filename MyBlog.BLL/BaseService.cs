@@ -24,26 +24,23 @@ namespace MyBlog.BLL
         /// </summary>
         public abstract void GetDal();
 
-        /// <summary>
-        /// EF上下文对象
-        /// </summary>
-        public IEFDbContext DbContext = DALContainer.Container.Resolve<IEFDbContext>();
+       
         
         #region 增删改查
         public bool Add(T t)
         {
             Dal.Add(t);
-            return DbContext.SaveChanges();
+            return Dal.SaveChanges();
         }
         public bool Delete(T t)
         {
             Dal.Delete(t);
-            return DbContext.SaveChanges();
+            return Dal.SaveChanges();
         }
         public bool Update(T t)
         {
             Dal.Update(t);
-            return DbContext.SaveChanges();
+            return Dal.SaveChanges();
         }
         public IQueryable<T> GetModels(Expression<Func<T, bool>> WhereLambda)
         {
