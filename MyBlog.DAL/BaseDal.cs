@@ -80,5 +80,8 @@ namespace MyBlog.DAL
             string sql = "select   count(*)   from   " + tableName;
             return dbContext.Database.SqlQuery<int>(sql).FirstOrDefault();
         }
+        public bool SaveChanges(){
+            return dbContext.SaveChanges() > 0;
+        }
     }
 }
