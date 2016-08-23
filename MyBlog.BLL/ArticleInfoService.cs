@@ -26,7 +26,7 @@ namespace MyBlog.BLL
                 {
                     ArticleInfoDal.Delete(article);   
                 }
-                return DbContext.SaveChanges();
+                return Dal.SaveChanges();
             }
             else
             {
